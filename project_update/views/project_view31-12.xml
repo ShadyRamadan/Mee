@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="theme_code_project_form">
+            <field name="name">Project Form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options_active']" position="after">
+                    <group name="main">
+                        <group>
+                            <field name="code"/>
+                            <field name="max_code" invisible="1"/>
+                        </group>
+                    </group>
+                    <group col='6' name="theme" string="Theme">
+                        <field name="is_education"/>
+                        <field name="is_health"/>
+                        <field name="is_livelihood"/>
+                        <field name="is_cash_assistant"/>
+                        <field name="is_basic_needs"/>
+                        <field name="is_youth_development"/>
+                        <field name="sub_theme" required="1"/>
+                    </group>        
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

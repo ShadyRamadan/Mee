@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<record id="view_account_move_post_form" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="moveid"/>
+                    <field name="moveid2"/>
+                    <field name="place_id" groups="donation.group_donation_user"/>
+                </xpath>
+                <xpath expr="//button[@name='toggle_active']" position="before">
+                    <button  class="oe_stat_button" name="attachment_tree_view"  type="object" icon="fa-files-o">
+                        <field string="Documents" name="doc_count" widget="statinfo"/>
+                    </button>
+                </xpath>
+            </field>
+        </record>-->
+        <record id="view_account_journal_donation_search" model="ir.ui.view">
+            <field name="name">account.journal.search</field>
+            <field name="model">account.move</field>
+            <field name="priority">1</field>
+            <field name="inherit_id" ref="account.view_account_move_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                     <filter domain="[('journal_id.type', '=', 'donation')]" string="Donation"/>
+                </xpath>
+                <!--<search string="Search Account Journal">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Journal"/>
+                    <filter domain="[('type', '=', 'sale')]" string="Sale"/>
+                    <filter domain="[('type', '=', 'purchase')]" string="Purchase"/>
+                    <filter domain="[('type', '=', 'donation')]" string="Donation"/>
+                    <filter domain="['|', ('type', '=', 'cash'), ('type', '=', 'bank')]" string="Liquidity"/>
+                    <filter domain="[('type', 'not in', ['sale', 'purchase', 'cash', 'bank'])]" string="Miscellaneous"/>
+                    <filter name="dashboard" string="Favorites" domain="[('show_on_dashboard', '=', True)]"/>
+                </search>-->
+            </field>
+        </record>
+    </data>
+</openerp>

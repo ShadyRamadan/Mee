@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_donation_care_viewer,Read access on donation.donation to Donation Viewer,model_donation_donation,group_donor_care_viewer,1,0,0,0
+access_donation_care_user,Full access on donation.donation to Donation User,model_donation_donation,group_donor_care_user,1,1,1,1
+access_donation_care_line_viewer,Read access on donation.line to Donation Viewer,model_donation_line,group_donor_care_viewer,1,0,0,0
+access_donation_care_line_user,Full access on donation.line to Donation User,model_donation_line,group_donor_care_user,1,1,1,1
+access_donation_care_donation_read,Read access on donation.donation to Employee grp,model_donation_donation,base.group_user,1,0,0,0
+access_donation_care_line_read,Read access on donation.line to Employee grp,model_donation_line,base.group_user,1,0,0,0
+access_account_journal_donation_care,Read access on account.journal,account.model_account_journal,group_donor_care_viewer,1,0,0,0
+access_account_move_donation_care,Full access on account.move,account.model_account_move,group_donor_care_user,1,1,1,1
+access_account_move_line_donation_care,Full access on account.move.line,account.model_account_move_line,group_donor_care_user,1,1,1,1
+access_account_analytic_line_donation_care,Full access on account.analytic.line to donation user,analytic.model_account_analytic_line,group_donor_care_user,1,1,1,1

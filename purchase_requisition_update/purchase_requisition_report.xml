@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+         <report 
+            string="Committee Members" 
+            id="action_report_purchase_requisitions_committee_members" 
+            model="purchase.requisition" 
+            report_type="qweb-pdf"
+            name="purchase_requisition_update.report_purchaserequisition_committeemembers" 
+            file="purchase_requisition_update.report_purchaserequisition_committeemembers"
+            menu="True"
+         />
+    </data>
+</openerp>

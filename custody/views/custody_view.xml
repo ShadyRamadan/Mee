@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_warehouse_custody_form">
+            <field name="name">warehouse.custody.form</field>
+            <field name="model">warehouse.custody</field>
+            <field name="arch" type="xml">
+                <form string="Employee Custody">
+                    <header>
+                        <button name="button_reset"
+                            string="Reset"
+                            class="oe_highlight"
+                            attrs="{'invisible':[('state','not in',[3])]}"
+                            type="object"/>
+                        <button name="button_receipt"
+                            string="Custody Receipt"
+                            class="oe_highlight"
+                            attrs="{'invisible':[('state','not in',[2])]}"
+                            type="object"/>
+                        <button name="button_delivery"
+                            string="Custody Delivery" type="object"
+                            attrs="{'invisible':[('state','in',[2,3])]}"
+                            class="oe_highlight"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="1,2,3"
+                           statusbar_colors='{"delivery":"blue","receipt":"red"}'/>
+                    </header>
+                    <!--<sheet>-->
+                        <div class="oe_edit_only">
+                            <label for="custody_number" class="oe_inline"/>
+                        </div>
+                        <h1>
+                            <field name="custody_number" class="oe_inline"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="employee_id"/>
+                                <field name="employee_user" invisible="1"/>
+                                <field name="department" domain="[('parent_id','=',False)]"/>
+                                <field name="project" domain="[('parent_id','=',department)]"/>
+                                <field name="requested_by"/>
+                            </group>
+                            <group>
+                                <field name="purchase_request"/>
+                                <field name="purchase_request_date" invisible="1"/>
+                                <field name="delivery_date"/>
+                                <field name="finish_date"/>
+                                <field name="is_active"/>
+                            </group>
+                        </group>
+                        <group>
+                        <notebook>
+                            <page name="items" string="Products">
+                                <field name="line_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="product_id"/>
+                                    <field name="internal_reference"/>
+                                    <field name="barcode"/>
+                                    <field name="description"/>
+                                    <field name="product_qty"/>
+                                    <field name="custody_id" invisible="1"/>
+                                    <field name="requested_by" invisible="1"/>
+                                    <field name="date_start"/>
+                                    <field name="employee_id" invisible="1"/>
+                                    <field name="finish_date" invisible="1"/>
+                                    <field name="is_active" invisible="1"/>
+                                    <field name="is_warranty"/>
+                                </tree>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="product_id"/>
+                                            <field name="internal_reference"/>
+                                            <field name="barcode"/>                                            <field name="product_qty"/>
+                                            <field name="custody_id" invisible="1"/>
+                                            <field name="requested_by" invisible="1"/>
+                                            <field name="date_start"/>
+                                            <field name="employee_id" invisible="1"/>
+                                            <field name="finish_date" invisible="1"/>
+                                            <field name="is_active" invisible="1"/>
+                                            <field name="is_warranty"/>
+                                        </group>
+                                        <group>
+                                            <separator string="Specifications"/>
+                                            <newline/>
+                                            <field name="description" nolabel="1"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_warehouse_custody_tree">
+            <field name="name">warehouse.custody.tree</field>
+            <field name="model">warehouse.custody</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Custody">
+                    <field name="custody_number"/>
+                    <field name="employee_id"/>
+                    <field name="delivery_date"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_warehouse_custody_search" model="ir.ui.view">
+            <field name="name">warehouse.custody.list.select</field>
+            <field name="model">warehouse.custody</field>
+            <field name="arch" type="xml">
+                <search string="Search Employee Custody">
+                    <field name="custody_number" string="Custody Number"/>
+                    <!--<separator/>
+                    <field name="state"/>
+                    <filter name="unassigned" string="Unassigned"
+                            domain="[('assigned_to','=', False)]"
+                            help="Unassigned Request"/>
+                    <filter name="state_draft" string="Draft"
+                            domain="[('state','=','draft')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_to_approve" string="To Approve"
+                            domain="[('state','=','to_approve')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_approved" string="Approved"
+                            domain="[('state','=','approved')]"
+                            help="Request is approved"/>
+                    <filter name="state_rejected" string="Rejected"
+                            domain="[('state','=','rejected')]"
+                            help="Request is rejected"/>
+                    <filter string="Unread Messages"
+                            name="message_needaction"
+                            domain="[('message_needaction','=',True)]"/>
+                    <filter domain="[('assigned_to','=', uid)]"
+                            help="Assigned to me"/>
+                    <filter domain="[('requested_by','=', uid)]"
+                            help="My requests"/>
+                    <field name="requested_by" />
+                    <field name="assigned_to" />
+                    <field name="picking_type_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'requested_by'}"/>
+                        <filter string="Assigned to" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'assigned_to'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                    </group> -->
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="warehouse_custody_form_action">
+            <field name="name">Employee Custody</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">warehouse.custody</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_requested_by":0}</field>
+            <field name="search_view_id" ref="view_warehouse_custody_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new purchase request process.
+              </p><p>
+                A purchase request is an instruction to Purchasing to procure
+                a certain quantity of materials services, so that they are
+                available at a certain point in time.
+              </p>
+            </field>
+        </record>
+        
+         <record model="ir.ui.view" id="view_warehouse_custody_kanban">
+            <field name="name">warehouse.custody.kanban</field>
+            <field name="model">warehouse.custody</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="employee_id" class="o_kanban_small_column" edit="false" quick_create="false">
+                    <field name="custody_number"/>
+                    <field name="color"/>
+                    <field name="employee_id"/>
+                    <field name="finish_date"/>
+                    <field name="delivery_date"/>
+                    <field name="state"/>
+                    <field name="department"/>
+                    <field name="project"/>
+                    <field name="purchase_request"/>
+                    <!--<field name="stage" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="name"/>
+                    <field name="requested_by"/>
+                    <field name="assigned_to"/>
+                    <field name="date_start"/>
+                    <field name="date_finish"/>
+                    <field name="done1"/>
+                    <field name="ontime"/>-->
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click">
+                           <!-- <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div> -->
+                            <div class="oe_kanban_content">
+                                  <strong>
+                                <field name="custody_number"/>
+                            </strong>
+                            <ul>
+                                <li t-if="record.state.raw_value"><field name="state"/></li>
+                                <li t-if="record.delivery_date.raw_value"><field name="delivery_date"/></li>
+                                <li t-if="record.finish_date.raw_value"><field name="finish_date"/></li>
+                                <li t-if="record.department.raw_value"><field name="department"/></li>
+                                <li t-if="record.project.raw_value"><field name="project"/></li>
+                                <li t-if="record.purchase_request.raw_value"><field name="purchase_request"/></li>
+                            </ul>
+                                <div class="text-muted">
+                                 
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record>
+       
+        <menuitem id="parent_menu_warehouse_custody"
+            name="Employee Custody"/>
+        <menuitem id="menu_warehouse_custody"
+            name="Employee Custody"
+            parent="parent_menu_warehouse_custody"/>
+        <menuitem
+            id="menu_warehouse_custody_act"
+            sequence="10"
+            parent="menu_warehouse_custody"
+            action="warehouse_custody_form_action"/>
+    </data>
+</openerp>

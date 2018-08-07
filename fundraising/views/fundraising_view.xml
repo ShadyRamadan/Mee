@@ -1,0 +1,641 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+        <record id="donation_booths_action" model="ir.actions.act_window">
+            <field name="name">Donations</field>
+            <field name="res_model">donation.donation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_donation_by':'uid'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to create a Donation.</p>
+            </field>
+        </record>
+        <record id="fund_donation_action" model="ir.actions.act_window">
+            <field name="name">Donations</field>
+            <field name="res_model">donation.donation</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_fund_id': active_id}</field>
+        </record>
+        <record id="fund_donation_action2" model="ir.actions.act_window">
+            <field name="name">Donations</field>
+            <field name="res_model">donation.donation</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_donation_section':1}</field>
+        </record>
+        <record id="box_donation_action" model="ir.actions.act_window">
+            <field name="name">Donations</field>
+            <field name="res_model">donation.donation</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_box_id': active_id}</field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_fundraising_booths_form">
+            <field name="name">fundraising.booths.form</field>
+            <field name="model">fundraising.booths</field>
+            <field name="arch" type="xml">
+                <form string="Crowed-Funding">
+                    <header>
+                        <button name="button_reset"
+                            string="Reset"
+                            class="oe_highlight"
+                            attrs="{'invisible':[('state','in',[1,2,3])]}"
+                            type="object"/>
+                        <button name="button_checkin"
+                            string="Sign In"
+                            attrs="{'invisible':[('state','in',[2,3])]}"
+                            class="oe_highlight"
+                            type="object"/>
+                        <button name="button_checkout"
+                            string="Sign Out" type="object"
+                            attrs="{'invisible':[('state','in',[1,3])]}"
+                            class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                           statusbar_visible="1,2,3"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action"
+                                    name="%(fundraising.fund_donation_action)d"
+                                    icon="fa-heart-o">
+                                <field string="Donations" name="donation_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                            <group>
+                                <group>
+                                    <field name="employee_id"/>
+                                    <field name="employee_user" readonly="1"/>
+                                    <field name="department_id" readonly="1"/>
+                                    <field name="donation_section"/>
+                                    <field name="donation_place" required="1"/>
+                                </group>
+                                <group>
+                                    <field name="sign_in" readonly="1"/>
+                                    <field name="sign_out" readonly="1"/>
+                                    <field name="worked_hours" widget="float_time" readonly="1"/>
+                                    <field name="is_active" readonly="1"/>
+                                </group>
+                            </group>
+                        </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_fundraising_booths_tree">
+            <field name="name">fundraising.booths.tree</field>
+            <field name="model">fundraising.booths</field>
+            <field name="arch" type="xml">
+                <tree string="Crowed-Funding">
+                    <!--<field name="state"/>-->
+                    <field name="employee_id"/>
+                    <field name="employee_user"/>
+                    <field name="donation_section"/>
+                    <field name="donation_place"/>
+                    <field name="sign_in"/>
+                    <field name="sign_out"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_fundraising_boxes_tree">
+            <field name="name">fundraising.boxes.tree</field>
+            <field name="model">fundraising.boxes</field>
+            <field name="arch" type="xml">
+                <tree string="Boxes">
+                    <!--<field name="state"/>-->
+                    <field name="box_code"/>
+                    <field name="employee_user"/>
+                    <field name="employee_id" invisible="1"/>
+                    <field name="responsible_employee"/>
+                    <!--<field name="donation_section"/>-->
+                    <field name="donation_place" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="start_date"/>
+                    <field name="revoke_date"/>
+                    <field name="open_date"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_fundraising_boxes_form">
+            <field name="name">fundraising.boxes.form</field>
+            <field name="model">fundraising.boxes</field>
+            <field name="arch" type="xml">
+                <form string="Boxes">
+                    <header>
+                        <button name="button_reset"
+                            string="Reset"
+                            class="oe_highlight"
+                            attrs="{'invisible':[('state','in',[1,2,3,4,5])]}"
+                            type="object"/>
+                        <button name="button_start"
+                            string="Start"
+                            attrs="{'invisible':[('state','in',[2,3,4,5])]}"
+                            class="oe_highlight"
+                            type="object"/>
+                        <button name="button_revoke"
+                            string="Revoke" type="object"
+                            attrs="{'invisible':[('state','in',[1,3,4,5])]}"
+                            class="oe_highlight"/>
+                        <button name="button_open"
+                            string="Open" type="object"
+                            attrs="{'invisible':[('state','in',[1,2,4,5])]}"
+                            class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                           statusbar_visible="1,2,3,4,5"/>
+                    <!--<field name="state" widget="statusbar"
+                           statusbar_visible="1,2,3"/>-->
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action"
+                                    name="%(fundraising.box_donation_action)d"
+                                    icon="fa-heart-o">
+                                <field string="Donations" name="donation_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="box_code"/>
+                                <field name="employee_user"/>
+                                <field name="employee_id" invisible="1"/>
+                                <field name="responsible_employee"/>
+                                <!--<field name="donation_section"/>-->
+                                <field name="donation_place" required="1"/>
+                            </group>
+                            <group>
+                                <field name="start_date" readonly="1"/>
+                                <field name="revoke_date" readonly="1"/>
+                                <field name="open_date" readonly="1"/>
+                                <field name="is_active" readonly="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_fundraising_booths_search" model="ir.ui.view">
+            <field name="name">fundraising.booths.list.select</field>
+            <field name="model">fundraising.booths</field>
+            <field name="arch" type="xml">
+                <search string="Search Booths">
+                    <field name="employee_id" string="Employee"/>
+                    <!--<separator/>
+                    <field name="state"/>
+                    <filter name="unassigned" string="Unassigned"
+                            domain="[('assigned_to','=', False)]"
+                            help="Unassigned Request"/>
+                    <filter name="state_draft" string="Draft"
+                            domain="[('state','=','draft')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_to_approve" string="To Approve"
+                            domain="[('state','=','to_approve')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_approved" string="Approved"
+                            domain="[('state','=','approved')]"
+                            help="Request is approved"/>
+                    <filter name="state_rejected" string="Rejected"
+                            domain="[('state','=','rejected')]"
+                            help="Request is rejected"/>
+                    <filter string="Unread Messages"
+                            name="message_needaction"
+                            domain="[('message_needaction','=',True)]"/>
+                    <filter domain="[('assigned_to','=', uid)]"
+                            help="Assigned to me"/>
+                    <filter domain="[('requested_by','=', uid)]"
+                            help="My requests"/>
+                    <field name="requested_by" />
+                    <field name="assigned_to" />
+                    <field name="picking_type_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'requested_by'}"/>
+                        <filter string="Assigned to" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'assigned_to'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                    </group> -->
+                </search>
+            </field>
+        </record>
+        <record id="view_partner_fund_tree" model="ir.ui.view">
+            <field name="name">res.partner.fund.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="400" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Donors">
+                    <field name="display_name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="donor_classification"/>
+                    <field name="amount_total"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_partner_fund_form" model="ir.ui.view">
+            <field name="name">res.partner.fund.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="401"/>
+            <field name="arch" type="xml">
+                <form string="Donors">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <div class="oe_title">
+                        <field name="is_company"/><!--  invisible="1" -->
+                        <field name="company_type" widget="radio"
+                            class="oe_edit_only"
+                            on_change="on_change_company_type(company_type)"
+                            options="{'horizontal': true}"/>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="parent_id"
+                                placeholder="Company"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                                attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                                on_change="onchange_parent_id(parent_id)"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <div class="oe_edit_only">
+                                    <button name="open_parent" type="object" string="(edit)" class="oe_link"
+                                        attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                </div>
+                                
+                                <field name="street" placeholder="Street..." class="o_address_street"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                            </div>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="fax"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="title" options='{"no_open": True}'
+                                attrs="{'invisible': [('is_company', '=', True)]}"/>
+                            <field name="lang"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Contacts &amp; Addresses" autofocus="autofocus">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang,}">
+                                <kanban>
+                                    <field name="color"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="type"/>
+                                    <field name="email"/>
+                                    <field name="parent_id"/>
+                                    <field name="is_company"/>
+                                    <field name="function"/>
+                                    <field name="phone"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="state_id"/>
+                                    <field name="image"/>
+                                    <field name="lang"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                                    <t t-if="!record.image.raw_value">
+                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
+                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name"/>
+                                                    <div t-if="record.function.raw_value"><field name="function"/></div>
+                                                    <div t-if="record.email.raw_value"><field name="email"/></div>
+                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                        <div>
+                                                            <field name="zip"/>
+                                                            <field name="city"/>
+                                                        </div>
+                                                        <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                        <field name="country_id"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Contact / Address">
+                                    <sheet>
+                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <hr/>
+                                        <group>
+                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
+                                                <label for="street" string="Address"/>
+                                                <div>
+                                                    <div class="o_address_format" name="div_address">
+                                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)" context="{'country_id': country_id, 'zip': zip}"/>
+                                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                                    </div>
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="title" placeholder="e.g. Mr."
+                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="function" placeholder="e.g. Sales Director"
+                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="email"/>
+                                                <field name="phone" widget="phone"/>
+                                                <field name="mobile" widget="phone"/>
+                                                <field name="comment" placeholder="internal note..."/>
+                                            </group>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
+                                        <field name="lang" invisible="True"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_kanban_fund_view">
+            <field name="name">res.partner.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban">
+                    <field name="color"/>
+                    <field name="display_name"/>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="state_id"/>
+                    <field name="amount_total"/>
+                    <field name="donor_classification"/>
+                    <field name="category_id"/>
+                    <field name="image"/>
+                    <field name="type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_res_partner_kanban">
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <div class="o_kanban_image">
+                                    <t t-if="record.image.raw_value">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+                                    </t>
+                                    <t t-if="!record.image.raw_value">
+                                        <t t-if="record.type.raw_value === 'delivery'">
+                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                        </t>
+                                        <t t-if="record.type.raw_value === 'invoice'">
+                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                         </t>
+                                        <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                            <t t-if="record.is_company.raw_value === true">
+                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                            </t>
+                                            <t t-if="record.is_company.raw_value === false">
+                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="oe_partner_heading"><field name="display_name"/></strong>
+                                    <ul>
+                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                        <li t-if="record.amount_total.raw_value" class="o_text_overflow"><field name="amount_total"/></li>
+                                        <li t-if="record.donor_classification.raw_value" class="o_text_overflow"><field name="donor_classification"/></li>
+                                    </ul>
+                                    <div class="oe_kanban_partner_links"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <record id="view_partner_donor_fund_tree" model="ir.actions.act_window">
+            <field name="name">Donors List</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_fund_tree"/>
+            <field name="domain">[('is_donor','=', True)]</field>
+        </record>
+        
+        <record id="view_partner_donor_fund_form" model="ir.actions.act_window">
+            <field name="name">Donors Form</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,form</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_id" ref="res_partner_kanban_fund_view"/>
+            <field name="domain">[('is_donor','=', True)]</field>
+        </record>
+
+        <record id="view_partner_donor_form" model="ir.actions.act_window">
+            <field name="name">Donors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+    <!--<field name="view_id" ref="view_needed_cases_tree"/> -->
+            <field name="domain">[('is_donor','=', True)]</field>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="view_partner_donor_form_kanban">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="res_partner_kanban_fund_view"/>
+            <field name="act_window_id" ref="view_partner_donor_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="view_partner_donor_form_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_fund_tree"/>
+            <field name="act_window_id" ref="view_partner_donor_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="view_partner_donor_form_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_partner_fund_form"/>
+            <field name="act_window_id" ref="base.view_partner_form"/>
+            <!--<field name="context">{"default_type":"follow_up","default_team_id":2}</field>-->
+        </record>
+
+        <record model="ir.actions.act_window" id="fundraising_booths_form_action">
+            <field name="name">Crowed-Fund</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fundraising.booths</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_requested_by":0}</field>
+            <field name="search_view_id" ref="view_fundraising_booths_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new purchase request process.
+              </p><p>
+                A purchase request is an instruction to Purchasing to procure
+                a certain quantity of materials services, so that they are
+                available at a certain point in time.
+              </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="fundraising_boxes_form_action">
+            <field name="name">Boxes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fundraising.boxes</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_requested_by":0}</field>
+            <!--<field name="search_view_id" ref="view_fundraising_booths_search"/>-->
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new purchase request process.
+              </p><p>
+                A purchase request is an instruction to Purchasing to procure
+                a certain quantity of materials services, so that they are
+                available at a certain point in time.
+              </p>
+            </field>
+        </record>
+        <record id="donation_box_action2" model="ir.actions.act_window">
+            <field name="name">Donation Boxes</field>
+            <field name="res_model">donation.box</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field eval="False" name="donation.donation_line_tree"/>-->
+            <field name="view_id" ref="donation.donation_box_action"/>
+        </record>
+        <record id="donation_places_action2" model="ir.actions.act_window">
+            <field name="name">Donation Points</field>
+            <field name="res_model">donation.place</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field eval="False" name="donation.donation_line_tree"/>-->
+            <field name="view_id" ref="donation.donation_place_action"/>
+        </record>
+        <record id="donation_sections_action2" model="ir.actions.act_window">
+            <field name="name">Donation Sections</field>
+            <field name="res_model">donation.section</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field eval="False" name="donation.donation_line_tree"/>-->
+            <field name="view_id" ref="donation.donation_section_action"/>
+        </record>
+        <menuitem id="parent_menu_fundraising_booths"
+            name="Fund-raising"/>
+        <menuitem
+            id="menu_fundraising_booths_act"
+            sequence="10"
+            name="Crowed-Funding"
+            parent="parent_menu_fundraising_booths"
+            action="fundraising_booths_form_action"/>
+        <menuitem
+            id="menu_fundraising_boxes_act"
+            sequence="11"
+            name="Boxes"
+            parent="parent_menu_fundraising_booths"
+            action="fundraising_boxes_form_action"/>
+        <menuitem
+            id="menu_fundraising_crm_act"
+            sequence="12"
+            name="Call Center"
+            parent="parent_menu_fundraising_booths"/>
+        <menuitem id="donor" action="view_partner_donor_form"
+                  parent="menu_fundraising_crm_act" sequence="13" name="Donors"/>
+        <menuitem id="menu_fundraising_config"
+            name="Configuration"
+            sequence="14"
+            parent="parent_menu_fundraising_booths"/>
+        <menuitem
+            id="menu_fundraising_boxes_config"
+            sequence="15"
+            parent="menu_fundraising_config"
+            action="donation_box_action2"/>
+        <menuitem
+            id="menu_fundraising_places_config"
+            sequence="16"
+            parent="menu_fundraising_config"
+            action="donation_places_action2"/>
+        <menuitem
+            id="menu_fundraising_sections_config"
+            sequence="17"
+            parent="menu_fundraising_config"
+            action="donation_sections_action2"/>
+    </data>
+</openerp>

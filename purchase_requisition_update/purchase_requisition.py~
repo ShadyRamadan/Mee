@@ -1,0 +1,19 @@
+# -*- encoding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from datetime import datetime
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from openerp.tools.translate import _
+import openerp.addons.decimal_precision as dp
+from openerp.exceptions import UserError
+
+class purchase_requisition(osv.osv):
+    _name = "purchase.requisition"
+    _description = "Purchase Requisition"
+    _inherit = ['mail.thread', 'ir.needaction_mixin','purchase.requisition']
+
+    _columns = {
+        'member_1': fields.many2one('hr.employee','First Member'),
+        'member_2': fields.many2one('hr.employee','Second Member'),
+    }

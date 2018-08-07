@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Top menu item -->
+
+        <!-- Employee -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+	        <field name="inherit_id" ref="hr.view_employee_form"></field>	
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_ids']" position="before">
+                    <div class="oe_title">
+                            <label for="en_name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="en_name" placeholder="Employee's English Name"/>
+                            </h2>
+                        </div>
+                    <div class="oe_title">
+                            <label for="ar_name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="ar_name" placeholder="Employee's Arabic Name"/>
+                            </h2>
+                        </div>
+                </xpath>
+                <!--<xpath expr="//field[@name='en_name']" position="after">
+                    
+                </xpath>-->
+                 <!--<xpath expr="//field[@name='address_home_id']" position="after">--> 
+                <xpath expr="//group[@name='contact']" position="after">
+                        <group string='Arabic Address'>
+                            <field name="gov_id" string="Government"/>
+                            <field name="city_id" string="City"/>
+                            <field name="village_id" string="Village / Area"/>
+                            <field name="street" string="Street"/>
+                            <field name="address" string="Detailed Address"/>
+                        </group>
+                        <group string='English Address'>
+                            <field name="gov_en_id" string=" Government"/>
+                            <field name="city_en_id" string="City"/>
+                            <field name="village_en_id" string="Village / Area"/>
+                            <field name="street_en" string="Street"/>
+                            <field name="address_en" string="Detailed Address"/>
+                        </group>
+                </xpath>
+                 <xpath expr="//field[@name='address_home_id']" position="replace">
+                    <field name="address_home_id" required="0" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

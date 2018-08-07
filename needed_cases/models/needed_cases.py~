@@ -1,0 +1,175 @@
+# -*- coding: utf-8 -*-
+# Copyright 2016 Eficent Business and IT Consulting Services S.L.
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0).
+
+from openerp import api, fields, models, osv
+from openerp.exceptions import ValidationError
+import urlparse, os
+import re
+import datetime
+from xml.dom.minidom import ReadOnlySequentialNamedNodeMap
+import openerp.addons.decimal_precision as dp
+
+
+_EDUCATION = [
+    (1, 'امي'),
+    (2, 'شهادة محو اﻷمية'),
+    (3, 'مؤهل متوسط'),
+    (4, 'مؤهل عالي')
+]
+
+_JOB = [
+    (1, 'لا يعمل'),
+    (2, 'عامل يومية'),
+    (3, 'موظف بعقد مؤثت'),
+    (4, 'موظف')
+]
+_PROJECTS = [
+    (1, 'تريسيكل'),
+    (2, 'أخرى')
+]
+_DEPENDS = [
+    (1, 'يعول'),
+    (2, 'لا يعول')
+]
+_MARITALS = [
+    (1, 'أعزب'),
+    (2, 'متزوج'),
+    (3, 'مطلق'),
+    (4, 'أرمل')
+]
+
+class needed_cases(models.Model):
+    _description = 'needed cases'
+    _name = 'needed.cases'
+    #_columns = {
+    #    'country_id': fields.many2one('res.country', 'Country', required=True),
+    #    'name': fields.char('Gov Name', required=True,
+    #                        help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton'),
+    #    'code': fields.char('Gov Code', size=3,
+    #                        help='The state code in max. three chars.', required=True),
+    #    'city_ids': fields.one2many('govs.villages.city', 'city_id', string='Cities'),
+    #}
+    # journal_id = fields.Many2one('account.journal', string=
+    #country_id = fields.Many2one('res.country', 'Country', required=True, default=66)
+    #name = fields.Char('Gov Name', required=True)
+    #code = fields.Char('Gov Code', size=3, required=True)
+    #city_ids = fields.One2many('govs.villages.city', 'gov_id', string='Cities')
+    
+    @api.onchange('gov_id')
+    def onchange_gov(self):
+        res = {}
+        if self.gov_id:
+            res['domain'] = {'city_id': [('gov_id', '=', self.gov_id.id)]}
+            return res
+   
+    @api.onchange('city_id')
+    def onchange_city(self):
+        res = {}
+        if self.city_id:
+            res['domain'] = {'village_id': [('city_id', '=', self.city_id.id)]}
+            return res
+        
+    def _check_value_mobile(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids)
+        pattern = "^\+?[0-9]*$"
+        for data in record:
+            if (data.mobile_phone != False and re.match(pattern, data.mobile_phone) == None):
+                return False
+        return True
+    
+    _constraints = [
+    (_check_value_mobile, '"You cannot add value other than integer on mobile phone".', ['mobile_phone']),
+]
+    
+    @api.constrains('telephone')
+    def _check_value_telephone(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids)
+        pattern = "^\+?[0-9]*$"
+        for data in record:
+            if (data.tel_phone != False and re.match(pattern, data.tel_phone) == None):
+                raise ValidationError("You cannot add value other than integer on telephone: %s" % record.tel_phone)
+                return False
+        return True
+
+    @api.constrains('national_number')
+    def _check_value_national(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids)
+        pattern = "^\+?[0-9]*$"
+        for data in record:
+            if (data.national_number != False and re.match(pattern, data.national_number) == None):
+                raise ValidationError("You cannot add value other than integer on national number: %s" % record.national_number)
+                return False
+        return True
+
+    @api.constrains('number_family')
+    def _check_value_family(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids)
+        pattern = "^\+?[0-9]*$"
+        for data in record:
+            if (data.number_family != False and re.match(pattern, data.number_family) == None):
+                raise ValidationError("You cannot add value other than integer on number of family: %s" % record.number_family)
+                return False
+        return True 
+   
+    @api.constrains('number_depends')
+    def _check_value_depends(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids)
+        pattern = "^\+?[0-9]*$"
+        for data in record:
+            if (data.number_depends != False and re.match(pattern, data.number_depends) == None):
+                raise ValidationError("You cannot add value other than integer on number of family: %s" % record.number_depends)
+                return False
+        return True 
+    
+    # (_check_value_mobile2, '"You cannot add value other than integer on mobile phone2".', ['mobile_phone2']),
+    #(_check_value_national, '"You cannot add value other than integer on national number".', ['national_number'])
+    
+    name = fields.Char('Case Name', required=True)
+    mobile_phone = fields.Char('Mobile Phone', required=True, size=13, on_change='_check_value_mobile')
+    tel_phone = fields.Char('Telephone', required=False, size=13, on_change='_check_value_telephone')
+    national_number = fields.Char('National Number', required=True, size=14, on_change='_check_value_national')
+    number_family = fields.Char('Number of Family', required=True, on_change='_check_value_family')
+    
+    country_id = fields.Many2one('res.country', 'Country', required=True, default=66)
+    gov_id = fields.Many2one('govs.villages.gov', 'Gov', required=True, on_change="onchange_gov(gov_id)")
+    city_id = fields.Many2one('govs.villages.city', 'City', required=True, on_change="onchange_city(city_id)")
+    village_id = fields.Many2one('govs.villages.village', 'Village', reqired=False)
+    street = fields.Char('Street', required=False)
+    address = fields.Text('Address', required=False)
+
+    education = fields.Selection(selection=_EDUCATION, string='Education')
+    job = fields.Selection(selection=_JOB, string='Job')
+
+    project_type = fields.Selection(selection=_PROJECTS, string='Project Type')
+    project_other = fields.Char('Other', required=False)
+
+    marital_status = fields.Selection(selection=_MARITALS, string='Marital Status', required=False)
+    depends = fields.Selection(selection=_DEPENDS, string='Depends', required=False)
+    number_depends = fields.Char('Number of Depends', required=True, on_change='_check_value_depends)
+
+    is_disease = fields.Boolean(string="لا يعاني من أي مرض")
+    is_back = fields.Boolean(string="مشاكل في الظهر والمفصل")
+    is_chronic_disease = fields.Boolean(string="أمراض مزمنة لا تهدد الحياة")
+    is_not_chronic_disease = fields.Boolean(string="لا يعاني من أمراض مزمنة")
+    is_virus_C = fields.Boolean(string="Virus C")
+    is_kidney_fail = fields.Boolean(string="فشل كلوي")
+    is_cancer = fields.Boolean(string="سرطان")
+    is_right = fields.Boolean(string="سليم")
+    is_blind = fields.Boolean(string="عمى")
+    is_amputation = fields.Boolean(string="بتر")
+    is_paralysis = fields.Boolean(string="شلل")
+    is_disability = fields.Boolean(string="إعاقة ذهنية")
+    is_problem = fields.Boolean(string="مشكلة في اليد أو القدم")
+    is_weakness = fields.Boolean(string="ضعف نظر شديد")
+
+    #qualification = fields.Char('Qualification', required=False)
+    #job = fields.Char('Job', required=False)
+    color = fields.Integer('Color Index', compute="change_colore_on_kanban")
+    user_id = fields.Many2one('res.users', 'Related user', track_visibility='onchange')
+    _order = 'name'
+    
+    
+    def change_colore_on_kanban(self):   
+        for record in self:
+            color = 0

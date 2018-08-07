@@ -1,0 +1,512 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="crossovered_budget_inherit_view_form">
+            <field name="name">crossovered.budget.inherit.view.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+            <field name="arch" type="xml">
+               <data>
+                    <xpath expr="//field[@name='creating_user_id']" position="after">
+                        <field name="project_id"/>
+                        <field name="code"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_budget_post_inherit_form">
+            <field name="name">account.budget.post.inherit.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="inherit_id" ref="account_budget.view_budget_post_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="budget_id"/>
+                        <field name="project_id"/>
+                        <field name="code"/>
+                        <field name="display_name"/>
+                        <field name="project_code" invisible="0"/>
+                        <field name="max_code" invisible="0"/>
+                        <notebook>
+                            <page>
+                                <field name="crossovered_budget_line">
+                                    <tree string="Budget Lines">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="general_budget_id" string="DRC"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date" groups="base.group_no_one"/>
+                                        <field name="planned_amount" string="Budget Amount" sum="Planned Amount" widget="monetary"/>
+                                        <field name="practical_amount" string="Actual Amount" sum="Practical Amount" widget="monetary"/>
+                                        <field name="remain_amount" string = "Balance" sum="Remain Amount" widget="monetary"/>
+                                        <field name="theoritical_amount" string="Applied Amount" sum="Theoretical Amount" widget="monetary"/>
+                                        <field name="variance_amount" string = "Variance Amount" sum="Variance Amount" widget="monetary"/>
+                                        <field name="percentage" string="Percentage"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_budget_post_new_form">
+            <field name="name">account.budget.post.form</field>
+            <field name="model">account.budget.post</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Donor Report Code">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="budget_id" required="True"/>
+                        <field name="project_id"/>
+                        <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="project_code" invisible="0"/>
+                        <field name="max_code" invisible="0"/>
+                    </group>
+                    <notebook>
+                        <!--<page string="Accounts">
+                            <field name="account_ids">
+                                <tree>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                </tree>
+                            </field>
+                        </page>-->
+                        <page string="DEA Lines">
+                            <field name="crossovered_budget_line">
+                                <tree string="Budget Lines">
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="general_budget_id" string="DRC" invisible="1"/>
+                                    <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="paid_date" invisible="1" groups="base.group_no_one"/>
+                                    <field name="planned_amount" string="Budget Amount" sum="Planned Amount" widget="monetary"/>
+                                    <field name="practical_amount" string="Actual Amount" sum="Practical Amount" widget="monetary"/>
+                                    <field name="remain_amount" string = "Balance" sum="Remain Amount" widget="monetary"/>
+                                    <field name="theoritical_amount" string="Applied Amount" sum="Theoretical Amount" widget="monetary"/>
+                                    <field name="variance_amount" string = "Variance Amount" sum="Variance Amount" widget="monetary"/>
+                                    <field name="percentage" string="Percentage"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        <record id="view_budget_post_new_tree" model="ir.ui.view">
+            <field name="name">account.budget.post.tree</field>
+            <field name="model">account.budget.post</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Donor Report Code">
+                    <field name="name"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="budget_id" required="True"/>
+                    <field name="project_id"/>
+                    <field name="code"/>
+                    <field name="project_code" invisible="1"/>
+                    <field name="max_code" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="crossovered_budget_view_new_form">
+            <field name="name">crossovered.budget.view.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Budget">
+                    <header>
+                        <button string="Confirm" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
+                        <button string="Approve" name="validate" states="confirm" type="workflow" class="oe_highlight"/>
+                        <button string="Done" name="done" states="validate" type="workflow" class="oe_highlight"/>
+                        <button name="draft" states="cancel" string="Reset to Draft" type="workflow" />
+                        <button string="Cancel Budget" name="cancel" states="confirm,validate" type="workflow"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
+                    </header>
+                    <sheet string="Budget">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" attrs="{'readonly':[('state','!=','draft')]}" placeholder="Budget Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="display_name"/>
+                                <field name="creating_user_id" attrs="{'readonly':[('state','!=','draft')]}" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'account.group_account_user']}"/>
+                                <field name="project_id"/>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <label for="date_from" string="Period"/>
+                                <div>
+                                    <field name="date_from" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> - 
+                                    <field name="date_to" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1"/>
+                                </div>
+                                <field name="duration"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="budget_holder"/>
+                                <field name="department"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="DRC Lines">
+                                <field name="crossovered_budget" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                    <tree string="DRC Lines">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
+                                        <field name="budget_id"/>
+                                        <field name="project_id"/>
+                                    </tree>
+                                    <form string="DRC Lines">
+                                        <group col="4">
+                                            <field name="name"/>
+                                            <field name="code"/>
+                                            <field name="project_id" readonly="1"/>
+                                            <field name="project_code" invisible="0"/>
+                                            <field name="company_id"  groups="base.group_multi_company" options="{'no_create': True}"/>
+                                            <field name="budget_id" invisible="1"/>
+                                            <field name="max_code" invisible="1"/>
+                                            <field name="max_code2" invisible="1"/>
+                                        </group>
+                                        <notebook>
+                                            <!--<page string="Accounts" invisible="0">
+                                                <field name="account_ids">
+                                                    <tree>
+                                                        <field name="code"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                </field>
+                                            </page>-->
+                                            <page string="DEA Lines">
+                                                <field name="crossovered_budget_line">
+                                                    <tree string="Budget Lines" create="false">
+                                                        <field name="name"/>
+                                                        <field name="code"/>
+                                                        <field name="general_budget_id" string="DRC" invisible="1"/>
+                                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" invisible="1"/>
+                                                        <field name="date_from"/>
+                                                        <field name="date_to"/>
+                                                        <field name="paid_date" groups="base.group_no_one" invisible="1"/>
+                                                        <field name="planned_amount" string="Budget Amount" sum="Planned Amount" widget="monetary"/>
+                                                        <field name="practical_amount" string="Actual Amount" sum="Practical Amount" widget="monetary"/>
+                                                        <field name="remain_amount" string = "Balance" sum="Remain Amount" widget="monetary"/>
+                                                        <field name="theoritical_amount" string="Applied Amount" sum="Theoretical Amount" widget="monetary"/>
+                                                        <field name="variance_amount" string = "Variance Amount" sum="Variance Amount" widget="monetary"/>
+                                                        <field name="percentage" string="Percentage"/>
+                                                    </tree>
+                                                    <form string="DEA Lines">
+                                                        <group>
+                                                            <group>
+                                                                <field name="name"/>
+                                                                <field name="code"/>
+                                                                <field name="crossovered_budget_id"/>
+                                                                <field name="general_budget_id" string="DRC"/>
+                                                                
+                                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                                                            </group>
+                                                            <group>
+                                                                <label for="date_from" string="Period"/>
+                                                                <div>
+                                                                    <field name="date_from" class="oe_inline"/> - 
+                                                                    <field name="date_to" class="oe_inline"/>
+                                                                </div>
+                                                                <field name="paid_date" groups="base.group_no_one"/>
+                                                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                                            </group>
+                                                        </group>
+                                                        <group>
+                                                            <group>
+                                                                <field name="unit_name"/>
+                                                                <field name="actual_units"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="forecast_units"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="cost_unit"/>
+                                                            </group>
+                                                            <group>
+                                                                <field name="planned_amount" string="Budget Amount" widget="monetary"/>
+                                                            </group>
+                                                        </group>
+                                                    </form>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="DEA Lines">
+                                <field name="crossovered_budget_line" context="{'default_date_from': date_from,'default_date_to': date_to,'default_forecast_units': 1}" colspan="4" nolabel="1" attrs="{'readonly':[('state','!=','draft')]}">
+                                    <tree string="Budget Lines">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="crossovered_budget_id" invisible="1"/>
+                                        <field name="general_budget_id" string="DRC"/>
+                                        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" invisible="1"/>
+                                        <field name="date_from"/>
+                                        <field name="date_to"/>
+                                        <field name="paid_date" groups="base.group_no_one" invisible="1"/>
+                                        <field name="planned_amount" string="Budget Amount" sum="Planned Amount" widget="monetary"/>
+                                        <field name="practical_amount" string="Actual Amount" sum="Practical Amount" widget="monetary"/>
+                                        <field name="remain_amount" string = "Balance" sum="Remain Amount" widget="monetary"/>
+                                        <field name="theoritical_amount" string="Applied Amount" sum="Theoretical Amount" widget="monetary"/>
+                                        <field name="variance_amount" string = "Variance Amount" sum="Variance Amount" widget="monetary"/>
+                                        <field name="percentage" string="Percentage"/>
+                                    </tree>
+                                    <form string="DEA Lines">
+                                        <group>
+                                            <group>
+                                                <field name="name"/>
+                                                <field name="code"/>
+                                                <field name="crossovered_budget_id" required ='0'/>
+                                                <field name="general_budget_id" string="DRC" domain="[('budget_id','=',crossovered_budget_id)]"/>
+                                                <!--<field name="planned_amount" string="Budget Amount" widget="monetary"/>-->
+                                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting" readonly="1"/>
+                                            </group>
+                                            <group>
+                                                <label for="date_from" string="Period"/>
+                                                <div>
+                                                    <field name="date_from" class="oe_inline"/> - 
+                                                    <field name="date_to" class="oe_inline"/>
+                                                </div>
+                                                <field name="paid_date" groups="base.group_no_one"/>
+                                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                            </group>
+                                        </group>
+                                        <group>
+                                            <!--<group col='8'>
+                                                <field name="forecast_units"/> - 
+                                                <field name="unit_name"/>
+                                                <field name="actual_units"/>
+                                            </group>-->
+                                            <group>
+                                                <field name="unit_name"/>
+                                                <field name="forecast_units"/>
+                                                <field name="cost_unit"/>
+                                                <field name="planned_amount" string="Budget Amount" widget="monetary"/>
+                                            </group>
+                                            <group>
+                                                <field name="actual_units"/>
+                                                <field name="notes"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                            <page string="Expenses" invisible="0">
+                                                <field name="account_ids">
+                                                    <tree>
+                                                        <field name="code"/>
+                                                        <field name="name"/>
+                                                    </tree>
+                                                </field>
+                                            </page>
+                                        </notebook>
+                                    </form>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group col="6">
+                            <group>
+                                <field name="total_cost"/>
+                            </group>
+                            <group>
+                                <field name="total_actual"/>
+                            </group>
+                            <group>
+                                <field name="total_balance"/>
+                            </group>
+                        </group>
+                        <group col="6">
+                            <group>
+                                <field name="total_applied"/>
+                            </group>
+                            <group>
+                                <field name="total_variance"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="crossovered_budget_view_new_tree">
+            <field name="name">crossovered.budget.view.tree</field>
+            <field name="model">crossovered.budget</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+               <tree decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" string="Budget">
+                    <field name="name" colspan="1"/>
+                    <field name="code"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="creating_user_id"/>
+                    <field name="project_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_crossovered_budget_line_new_form">
+            <field name="name">crossovered.budget.line.form</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Budget Lines">
+                    <sheet>
+                        <!--<group col="4">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="crossovered_budget_id" string="Budget"/>
+                            <field name="analytic_account_id"/>
+                            <field name="general_budget_id" string="DRC"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="paid_date"/>
+                            <field name="planned_amount" string="Budget Amount" widget="monetary"/>
+                            <field name="practical_amount" string="Actual Amount" widget="monetary"/>
+                            <field name="remain_amount" string = "Balance" widget="monetary"/>
+                            <field name="theoritical_amount" string="Applied Amount" widget="monetary"/>
+                            <field name="variance_amount" string = "Variance Amount" widget="monetary"/>
+                            <field name="percentage" string="Percentage"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="project_id"/>
+                            <field name="max_code"/>
+                            <field name="project_code"/>
+                        </group>-->
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="crossovered_budget_id" string="Budget"/>
+                                <field name="general_budget_id" string="DRC"/>
+                                <field name="planned_amount" string="Budget Amount" widget="monetary"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                            </group>
+                            <group>
+                                <label for="date_from" string="Period"/>
+                                <div>
+                                    <field name="date_from" class="oe_inline"/> - 
+                                    <field name="date_to" class="oe_inline"/>
+                                </div>
+                                <field name="paid_date" groups="base.group_no_one"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="project_id"/>
+                                <field name="max_code" invisible="1"/>
+                                <field name="project_code" invisible="1"/>
+                            </group>
+                        </group>
+                        <group name="Units" string="Units">
+                            <group col='8'>
+                                <field name="forecast_units"/> - 
+                                <field name="unit_name"/>
+                                <field name="actual_units"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_crossovered_budget_line_new_tree">
+            <field name="name">crossovered.budget.line.tree</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Budget Lines">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="crossovered_budget_id" invisible="1"/>
+                    <field name="general_budget_id" string="DRC" invisible="1"/>
+                    <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="paid_date" groups="base.group_no_one"/>
+                    <field name="planned_amount" string="Budget Amount" widget="monetary"/>
+                    <field name="practical_amount" string="Actual Amount" widget="monetary"/>
+                    <field name="remain_amount" string = "Balance" widget="monetary"/>
+                    <field name="theoritical_amount" string="Applied Amount" widget="monetary"/>
+                    <field name="variance_amount" string = "Variance Amount" widget="monetary"/>
+                    <field name="percentage" string="Percentage"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+        <record model="ir.actions.act_window" id="act_crossovered_budget_view_new">
+            <field name="name">Budgets</field>
+            <field name="res_model">crossovered.budget</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="crossovered_budget_view_new_tree"/>
+            <field name="search_view_id" ref="account_budget.view_crossovered_budget_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new budget.
+              </p><p>
+                A budget is a forecast of your company's income and/or expenses
+                expected for a period in the future. A budget is defined on some
+                financial accounts and/or analytic accounts (that may represent
+                projects, departments, categories of products, etc.)
+              </p><p>
+                By keeping track of where your money goes, you may be less
+                likely to overspend, and more likely to meet your financial
+                goals. Forecast a budget by detailing the expected revenue per
+                analytic account and monitor its evolution based on the actuals
+                realised during that period.
+              </p>
+            </field>
+        </record>
+        
+        <record id="open_budget_post_inherit_form" model="ir.actions.act_window">
+            <field name="name">Donor Report Code</field>
+            <field name="res_model">account.budget.post</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_budget_post_new_tree"/>
+            <field name="context">{'group_by': 'budget_id'}</field>
+            <field name="search_view_id" ref="account_budget.view_budget_post_search"/>
+        </record>
+        
+        <record model="ir.actions.act_window" id="act_crossovered_budget_lines_inherit_view">
+            <field name="name">Direct Expense Accounts</field>
+            <field name="res_model">crossovered.budget.lines</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_crossovered_budget_line_new_tree"/>
+            <field name="context">{u'group_by': [u'crossovered_budget_id', u'general_budget_id']}</field>
+        </record>
+        
+        <menuitem parent="account.menu_finance"
+            id="menu_budget_view"
+            name="Budgets"
+            sequence="7" 
+            groups="account.group_account_user"/>
+            
+        <menuitem parent="menu_budget_view"
+            id="menu_budget_budgets_view"
+            name="Budget"
+            sequence="1"
+            action="act_crossovered_budget_view_new" 
+            groups="account.group_account_user"/>
+            
+        <menuitem action="open_budget_post_inherit_form" id="menu_budget_post_form"
+         parent="menu_budget_view" sequence="2" name="Donor Report Code"/>
+         
+         <menuitem action="act_crossovered_budget_lines_inherit_view" id="menu_crossover_budget_form"
+         parent="menu_budget_view" sequence="3" name="Direct Expense Accounts"/>
+    </data>
+</openerp>

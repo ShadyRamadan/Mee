@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data noupdate="1">
+        <record id="seq_govs" model="ir.sequence">
+            <field name="name">Govs</field>
+            <field name="code">govs.villages</field>
+            <field name="prefix">G</field>
+            <field name="padding">2</field>
+        </record>
+        <record id="seq_city" model="ir.sequence">
+            <field name="name">City</field>
+            <field name="code">govs.villages</field>
+            <field name="prefix">C</field>
+            <field name="padding">3</field>
+        </record>
+        <record id="seq_village" model="ir.sequence">
+            <field name="name">Village</field>
+            <field name="code">govs.villages</field>
+            <field name="prefix">V</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</openerp>

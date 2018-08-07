@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+import logging
+
+from openerp.osv import fields, osv
+from openerp import models, fields, api, exceptions, tools 
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
+class res_users(osv.osv):
+    _name = "res.users"
+    _description = "Users"
+    _inherit = "res.users"
+    
+    gov_id = fields.Many2one('govs.villages.gov', 'Gov', on_change="onchange_gov(gov_id)")
+    city_id = fields.Many2one('govs.villages.city', 'City', on_change="onchange_city(city_id)")
+    #place_id = fields.Many2one('donation.place','Place')
+    
+    @api.onchange('gov_id')
+    def onchange_gov(self):
+        res = {}
+        if self.gov_id:
+            res['domain'] = {'city_id': [('gov_id', '=', self.gov_id.id)]}
+            return res
+   
+    @api.onchange('city_id')
+    def onchange_city(self):
+        res = {}
+        if self.city_id:
+            res['domain'] = {'village_id': [('city_id', '=', self.city_id.id)]}
+            return res
+        
+
+
+    #def attachment_tree_view(self, cr, uid, ids, context):
+     #   domain = ['&', ('res_model', '=', 'hr.employee'), ('res_id', 'in', ids)]
+      #  res_id = ids and ids[0] or False
+       # return {
+        #    'name': _('Attachments'),
+         #   'domain': domain,
+          #  'res_model': 'ir.attachment',
+            #'type': 'ir.actions.act_window',
+           # 'view_id': False,
+            #'view_mode': 'kanban,tree,form',
+            #'view_type': 'form',
+            #'limit': 80,
+            #'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        #}
+
+    #def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+     #   res = {}
+      #  attachment = self.pool.get('ir.attachment')
+       # for id in ids:
+        #    employee_attachments = attachment.search(cr, uid, [('res_model', '=', 'hr.employee'), ('res_id', '=', id)], context=context, #count=True)
+ #           res[id] = employee_attachments or 0
+  #      return res
+
+   # _columns = {
+    #    'doc_count': fields.function(_get_attached_docs, string="Number of documents attached", type='integer')
+    #}
+  

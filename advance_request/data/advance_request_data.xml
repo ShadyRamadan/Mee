@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+
+    <data>
+        <!-- Request-related subtypes for messaging / Chatter -->
+        <record id="mt_advance_to_approve" model="mail.message.subtype">
+            <field name="name">Advance Request to be approved</field>
+            <field name="res_model">advance.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Advance Request to be approved</field>
+        </record>
+
+        <record id="mt_advance_approved" model="mail.message.subtype">
+            <field name="name">Advance Request approved</field>
+            <field name="res_model">advance.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Advance Request approved</field>
+        </record>
+        
+        <record id="mt_advance_to_department_manager_approved" model="mail.message.subtype">
+            <field name="name">Advance Request to be approved</field>
+            <field name="res_model">advance.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Advance Request to be approved</field>
+        </record>
+        
+        <record id="mt_advance_to_accountant_manager_approved" model="mail.message.subtype">
+            <field name="name">Advance Request to be approved</field>
+            <field name="res_model">advance.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Advance Request to be approved</field>
+        </record>
+
+        <record id="mt_advance_rejected" model="mail.message.subtype">
+            <field name="name">Advance Request rejected</field>
+            <field name="res_model">advance.request</field>
+            <field name="default" eval="True"/>
+            <field name="description">Advance Request Rejected</field>
+        </record>
+
+    </data>
+</openerp>

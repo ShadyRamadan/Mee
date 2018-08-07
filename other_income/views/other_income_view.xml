@@ -1,0 +1,305 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_other_income_form">
+            <field name="name">other.income.form</field>
+            <field name="model">other.income</field>
+            <field name="arch" type="xml">
+                <form string="Other Income" version="7.0">
+                    <header>
+                        <!--<button type="object" name="transfer" string="Transfer"
+                                class="oe_highlight" 
+                                attrs="{'invisible': [('state','not in',1)]}"
+                                groups="donation.group_donation_user"/>-->
+                        <button type="object" name="validate" string="Validate"
+                                class="oe_highlight" 
+                                attrs="{'invisible': [('state','not in',1)]}"
+                                invisible="context.get('recurring_view')"/>
+                        <!--<button type="object" name="cancel2draft"
+                                string="Back to Draft" 
+                                attrs="{'invisible': [('state','not in',4)]}"
+                                groups="donation.group_donation_user"/>
+                        <button type="object" name="done2cancel" string="Cancel"
+                                groups="donation.group_donation_user"
+                                attrs="{'invisible': [('state','not in',3)]}"/>
+                        <button type="object" name="save_default_values"
+                                string="Save Default Values"/>-->
+                        <field name="state" widget="statusbar"
+                               invisible="context.get('recurring_view')"/>
+                    </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="income_type" required="1"/>
+                        </group>
+                        <group>
+                            <field name="type_account" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="responsible_by"/>
+                        </group>
+                        <group>
+                            <field name="income_date"/>
+                            <field name="company_id" string="Location" groups="base.group_multi_company" widget="selection"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Income Lines" name="lines">
+                            <field name="line_ids" nolabel="1">
+                                <tree>
+                                    <field name="income_id"/>
+                                    <field name="requisition_id"/>
+                                    <field name="partner_id" domain="[('supplier', '=', True)]"/>
+                                    <field name="recipt_number"/>
+                                    <field name="payment_method" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name="fundstream_id" required="1"/>
+                                    <field name="bank_id"/>
+                                    <field name="invoice_id"/>
+                                    <field name="amount"/>
+                                </tree>
+                                <form string="Income Line">
+                                    <group>
+                                        <group attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False)]}">
+                                            <field name="is_visible_prep" invisible="1"/>
+                                            <field name="is_visible_interest" invisible="1"/>
+                                            <field name="is_visible_bank" invisible="1"/>
+                                            <field name="is_visible_discounts" invisible="1"/>
+                                            <field name="is_visible_others" invisible="1"/>
+                                            <field name="income_type_id" readonly="1" invisible="1"/>
+                                            <!--<field name="income_type_state"/>-->
+                                            <field name="partner_id" domain="[('supplier', '=', True)]" attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                            <field name="requisition_id" attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                        </group>
+                                        <group>
+                                            <field name="recipt_number" attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False),('is_visible_discounts','=', False)]}"/>
+                                            <field name="fundstream_id"/>
+                                            <field name="payment_method" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                            <field name="account_id" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" attrs="{'invisible':[('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                            <field name="analytic_account_id"/>
+                                        </group>
+                                        <group string="Bank" attrs="{'invisible':[('is_visible_bank','=', False),('is_visible_interest','=', False)]}">
+                                            <field name="bank_id"/>
+                                            <field name="bank_account"/>
+                                            <field name="bank_balance" attrs="{'invisible':[('is_visible_bank','=', False)]}"/>
+                                            <field name="currency_rate" attrs="{'invisible':[('is_visible_bank','=', False)]}"/>
+                                            <field name="current_rate" attrs="{'invisible':[('is_visible_bank','=', False)]}"/>
+                                            <field name="difference_rate" attrs="{'invisible':[('is_visible_bank','=', False)]}"/>
+                                        </group>
+                                        <group string="Bills" attrs="{'invisible':[('is_visible_discounts','=', False)]}">
+                                            <field name="invoice_id"/>
+                                            <field name="invoice_vendor"/>
+                                            <field name="invoice_source"/>
+                                            <field name="vendor_account"/>
+                                        </group>
+                                    </group>
+                                    <group>
+                                        <field name="quantity" attrs="{'invisible':[('is_visible_discounts','=', False),('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                        <field name="unit_price" attrs="{'invisible':[('is_visible_discounts','=', False),('is_visible_prep','=', False),('is_visible_others','=', False)]}"/>
+                                        <field name="interest_amount" attrs="{'invisible':[('is_visible_interest','=', False)]}"/>
+                                        <field name="amount"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" readonly="1" invisible="1"/>
+                                    </group>
+                                </form>
+                            </field>
+                            <group>
+                                <group name="subtotal" class="oe_subtotal_footer oe_right">
+                                    <field name="amount_total" string="Total"
+                                           class="oe_subtotal_footer_separator"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Other Information" name="other">
+                        <group name="other">
+                            <field name="move_id"/>
+                            <!--<field name="move_analytic_id"/>
+                            <field name="amount_total_company_currency"
+                                groups="base.group_multi_currency"/>-->
+                        </group>
+                    </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                  <field name="message_follower_ids" widget="mail_followers"/>
+                  <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_other_income_tree">
+            <field name="name">other.income.tree</field>
+            <field name="model">other.income</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True"
+                      decoration-info="state in ('draft','to_approve')"
+                      decoration-muted="state in ('rejected')"
+                      string="Other Incomes">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name"/>
+                    <field name="income_date"/>
+                    <field name="responsible_by"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="state" string="Status Approving"/>
+                    <field name="income_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_other_income_search" model="ir.ui.view">
+            <field name="name">other.income.list.select</field>
+            <field name="model">other.income</field>
+            <field name="arch" type="xml">
+                <search string="Search Other Incomes">
+                    <field name="name" string="Other Incomes"/>
+                    <separator/>
+                    <field name="state"/>
+                    <!--<filter name="unassigned" string="Unassigned"
+                            domain="[('assigned_to','=', False)]"
+                            help="Unassigned Request"/>
+                    <filter name="state_draft" string="Draft"
+                            domain="[('state','=','draft')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_to_approve" string="To Approve"
+                            domain="[('state','=','to_approve')]"
+                            help="Request is to be approved"/>
+                    <filter name="state_approved" string="Approved"
+                            domain="[('state','=','approved')]"
+                            help="Request is approved"/>
+                    <filter name="state_rejected" string="Rejected"
+                            domain="[('state','=','rejected')]"
+                            help="Request is rejected"/>
+                    <filter string="Unread Messages"
+                            name="message_needaction"
+                            domain="[('message_needaction','=',True)]"/>
+                    <filter domain="[('assigned_to','=', uid)]"
+                            help="Assigned to me"/>
+                    <filter domain="[('requested_by','=', uid)]"
+                            help="My requests"/> -->
+                    <field name="responsible_by" />
+                    <!--<field name="assigned_to" /> -->
+                    <group expand="0" string="Group By...">
+                        <filter string="Requested by" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'responsible_by'}"/>
+                        <!--<filter string="Assigned to" icon="terp-personal"
+                                domain="[]"
+                                context="{'group_by':'assigned_to'}"/>
+                        <filter string="Source" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Start Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_start'}"/>
+                        -->
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="other_income_form_action">
+            <field name="name">Other Incomes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">other.income</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_responsible_by":0}</field>
+            <field name="search_view_id" ref="view_other_income_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to start a new Other Income process.
+              </p><p>
+                An Other Income is an instruction to enter to incomes
+                a certain quantity of materials services, so that they are
+                available at a certain point in time.
+              </p>
+            </field>
+        </record>
+        
+         <!--<record model="ir.ui.view" id="view_advance_request_kanban">
+            <field name="name">advance.request.kanban</field>
+            <field name="model">advance.request</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage" class="o_kanban_small_column" edit="false" quick_create="false">
+                    <field name="color"/>
+                    <field name="stage" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="name"/>
+                    <field name="requested_by"/>
+                    <field name="assigned_to"/>
+                    <field name="date_start"/>
+                    <field name="date_finish"/>
+                    <field name="done1"/>
+                    <field name="ontime"/>
+                    <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click">
+                           -->
+                           <!-- <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div> -->
+                            <!--<div class="oe_kanban_content">
+                                  <strong>
+                                <field name="name"/>
+                            </strong>
+                            <ul>
+                                <li t-if="record.requested_by.raw_value"><field name="requested_by"/></li>
+                                <li t-if="record.assigned_to.raw_value"><field name="assigned_to"/></li>
+                                <li t-if="record.date_start.raw_value"><field name="date_start"/></li>
+                                <li t-if="record.date_finish.raw_value"><field name="date_finish"/></li>
+                                <li t-if="record.state.raw_value"><field name="state"/></li>
+                                <li t-if="record.state.raw_value"><field name="done1"/></li>
+                                <li t-if="record.state.raw_value"><field name="ontime"/></li>
+                                <field name="progress" widget="gauge" style="width:120px;height:90px;cursor:pointer;"/>
+                            </ul>
+                                <div class="text-muted">
+                                 
+                                </div>
+                                
+                            </div>
+                            
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                    </templates>
+                </kanban>
+            </field>
+         </record> -->
+
+        <!-- groups="group_advance_request_user,group_advance_request_manager"
+             groups="group_advance_request_user,group_advance_request_manager" 
+             
+        
+        <menuitem
+            id="menu_advance_request_pro_mgt"
+            parent="purchase.menu_procurement_management"
+            action="purchase_request_form_action"/>-->
+
+        <menuitem id="parent_menu_other_income"
+            name="Other Incomes"/>
+            
+        <menuitem id="menu_other_income"
+            name="Other Income"
+            parent="parent_menu_other_income"/>
+        
+        <menuitem id="menu_Config_other_income"
+            name="Other Income Configuration"
+            parent="parent_menu_other_income"/>
+            
+        <menuitem
+            id="menu_other_income_act"
+            sequence="10"
+            parent="menu_other_income"
+            action="other_income_form_action"/>
+    </data>
+</openerp>

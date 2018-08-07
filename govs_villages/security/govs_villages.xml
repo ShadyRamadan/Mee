@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+<data noupdate="0">
+
+    <record model="ir.module.category" id="module_category_govs_villages">
+        <field name="name">Govs Villages</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="group_govs_villages_user" model="res.groups">
+        <field name="name">Govs Villages User</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="module_category_govs_villages"/>
+    </record>
+
+    <record id="group_govs_villages_manager" model="res.groups">
+        <field name="name">Govs Villages Manager</field>
+        <field name="implied_ids" eval="[(4, ref('govs_villages.group_govs_villages_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="category_id" ref="module_category_govs_villages"/>
+    </record>
+
+</data>
+<data noupdate="0">
+
+    <record id="govs_villages_rule" model="ir.rule">
+        <field name="name">Govs Villages User</field>
+        <field name="model_id" ref="model_govs_villages"/>
+        <field name="groups" eval="[(6,0, [ref('group_govs_villages_user')])]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <!--<field name="domain_force">[('requested_by','=',user.id)]</field>-->
+    </record>
+
+    <record id="govs_villages_manager_rule" model="ir.rule">
+        <field name="name">Govs Villages Manager</field>
+        <field name="model_id" ref="model_govs_villages"/>
+        <field name="groups" eval="[(6,0, [ref('group_govs_villages_manager')])]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+</data>
+</openerp>

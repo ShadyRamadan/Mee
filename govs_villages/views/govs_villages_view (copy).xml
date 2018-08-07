@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+         <!-- State -->
+        <record id="view_govs_villages_gov_tree" model="ir.ui.view">
+            <field name="name">govs.villages.gov.tree</field>
+            <field name="model">govs.villages.gov</field>
+            <field name="arch" type="xml">
+                <tree string="Gov">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_govs_villages_gov_form" model="ir.ui.view">
+            <field name="name">govs.villages.gov.form</field>
+            <field name="model">govs.villages.gov</field>
+            <field name="arch" type="xml">
+                <form string="Gov">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": True}'/>
+                    </group>
+                    <!--<label for="city_ids"/>
+                    <field name="city_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="country_id" options='{"no_open": True}'/>
+                        </tree>
+                    </field>-->
+                </form>
+            </field>
+        </record>
+
+        <record id="action_govs_villages_gov" model="ir.actions.act_window">
+            <field name="name">Fed. Govs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">govs.villages.gov</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_govs_villages_gov_tree"/>
+            <field name="help">If you are working on the Egyptian project, you can manage the different federal govs you are working on from here. Each gov is attached to one country.</field>
+        </record>
+
+       <!-- <menuitem action="action_govs_villages_gov" id="menu_govs_villages_gov_partner" parent="menu_localisation" sequence="2" groups="base.group_no_one"/> -->
+
+        <!-- city -->
+        <record id="view_govs_villages_city_tree" model="ir.ui.view">
+            <field name="name">govs.villages.city.tree</field>
+            <field name="model">govs.villages.city</field>
+            <field name="arch" type="xml">
+                <tree string="City">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                    <!--<field name="gov_id"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_govs_villages_city_form" model="ir.ui.view">
+            <field name="name">govs.villages.city.form</field>
+            <field name="model">govs.villages.city</field>
+            <field name="arch" type="xml">
+                <form string="city">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": True}'/>
+                        <!--<field name="gov_id" options='{"no_open": True}'/>-->
+                    </group>
+                    <!--<label for="village_ids"/>
+                    <field name="village_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="country_id" options='{"no_open": True}'/>
+                            <field name="gov_id" options='{"no_open": True}'/>
+                        </tree>
+                    </field>-->
+                </form>
+            </field>
+        </record>
+
+        <record id="action_govs_villages_city" model="ir.actions.act_window">
+            <field name="name">Cities</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">govs.villages.city</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_govs_villages_city_tree"/>
+            <field name="help">If you are working on the Egyptian project, you can manage the different federal govs you are working on from here. Each state is attached to one country.</field>
+        </record>
+
+        <!-- <menuitem action="action_govs_villages_city" id="menu_govs_villages_city_partner" parent="menu_localisation" sequence="4" groups="base.group_no_one"/> -->
+        
+        <!-- Village -->
+        <record id="view_govs_villages_village_tree" model="ir.ui.view">
+            <field name="name">govs.villages.village.tree</field>
+            <field name="model">govs.villages.village</field>
+            <field name="arch" type="xml">
+                <tree string="Village">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                    <!--<field name="gov_id"/>
+                    <field name="city_id"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_govs_villages_village_form" model="ir.ui.view">
+            <field name="name">govs.villages.village.form</field>
+            <field name="model">govs.villages.village</field>
+            <field name="arch" type="xml">
+                <form string="village">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="country_id" options='{"no_open": True}'/>
+                        <!--<field name="gov_id" options='{"no_open": True}'/>
+                        <field name="city_id" options='{"no_open": True}'/>-->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_govs_villages_village" model="ir.actions.act_window">
+            <field name="name">Villages</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">govs.villages.village</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_govs_villages_village_tree"/>
+            <field name="help">If you are working on the Egyptian project, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
+        </record>
+
+        <!--<menuitem action="action_govs_villages_village" id="menu_govs_villages_village_partner" parent="menu_localisation" sequence="4" groups="base.group_no_one"/>-->
+    </data>
+</openerp>

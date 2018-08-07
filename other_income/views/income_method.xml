@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+
+<record id="income_method_form" model="ir.ui.view">
+    <field name="name">income.method.form</field>
+    <field name="model">income.method</field>
+    <field name="arch" type="xml">
+        <form string="Payment Method">
+            <group name="main">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="account_id" required="1"/>
+                <field name="responsible"/>
+                <field name="nota"/>
+                <field name="is_bank"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="income_method_tree" model="ir.ui.view">
+    <field name="name">income.method.tree</field>
+    <field name="model">income.method</field>
+    <field name="arch" type="xml">
+        <tree string="Payment Method">
+            <field name="code"/>
+            <field name="name"/>
+            <field name="responsible"/>
+            <field name="account_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="income_method_action" model="ir.actions.act_window">
+    <field name="name">Payment Method</field>
+    <field name="res_model">income.method</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="income_method_menu" action="income_method_action"
+    parent="menu_Config_other_income" sequence="33"/>
+</data>
+</odoo>

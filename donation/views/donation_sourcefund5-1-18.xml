@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+    <data>
+        <record id="donation_sourcefund_form" model="ir.ui.view">
+            <field name="name">donation.sourcefund.form</field>
+            <field name="model">donation.sourcefund</field>
+            <field name="arch" type="xml">
+                <form string="Source Of Fund">
+                    <group name="main">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="organization"/>
+                        <field name="fundstream_id"/>
+                        <field name="start_date"/>
+                        <field name="responsible"/>
+                        <field name="nota"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="donation_sourcefund_tree" model="ir.ui.view">
+            <field name="name">donation.sourcefund.tree</field>
+            <field name="model">donation.sourcefund</field>
+            <field name="arch" type="xml">
+                <tree string="Source Of Fund">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="organization"/>
+                    <field name="start_date"/>
+                    <field name="fundstream_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="donation_sourcefund_action" model="ir.actions.act_window">
+            <field name="name">Source Of Fund</field>
+            <field name="res_model">donation.sourcefund</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="donation_sourcefund_menu" action="donation_sourcefund_action"
+                  parent="donation.donation_config_menu" sequence="31"/>
+    </data>
+</odoo>

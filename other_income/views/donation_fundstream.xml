@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+        
+<record id="donation_fundstream_form_inherit" model="ir.ui.view">
+    <field name="name">donation.fundstream.form</field>
+    <field name="model">donation.fundstream</field>
+    <field name="inherit_id" ref="donation.donation_fundstream_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//page[@name='lines']" position="after">
+            <page string="Other Source of Fund" name="other_lines">
+                <field name="other_line_ids" nolabel="1">
+                    <tree create="false">
+                        <field name="income_id"/>
+                        <field name="requisition_id"/>
+                        <field name="partner_id" domain="[('supplier', '=', True)]"/>
+                        <field name="recipt_number"/>
+                        <field name="payment_method" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                        <field name="bank_id"/>
+                        <field name="invoice_id"/>
+                        <field name="amount"/>
+                    </tree>
+                </field>
+            </page>
+        </xpath>   
+        <xpath expr="//field[@name='total_fund']" position="after">
+            <field name="total_other"/>
+        </xpath>     
+    </field>
+</record>
+
+</data>
+</odoo>

@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+         <!-- Volunteers -->
+        <record id="view_volunteers_tree" model="ir.ui.view">
+            <field name="name">volunteers.tree</field>
+            <field name="model">volunteers</field>
+            <field name="arch" type="xml">
+                <tree string="Volunteers">
+                    <field name="role"/>
+                    <field name="national_number"/>
+                    <field name="name"/>
+                    <field name="mobile_phone"/>
+                    <field name="country_id"/>
+                    <field name="gov_id"/>
+                    <field name="city_id"/>
+                    <field name="village_id"/>
+                    <field name="student"/>
+                    <field name="job"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_volunteers_form" model="ir.ui.view">
+            <field name="name">volunteers.form</field>
+            <field name="model">volunteers</field>
+            <field name="arch" type="xml">
+                <form string="Volunteers">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="national_number"/>
+                            <field name="mobile_phone"/>
+                            <field name="mobile_phone2"/>
+                            <field name="role"/>
+                        <group>
+                        <group>
+                            <field name="country_id"/>
+                            <field name="gov_id"/>
+                            <field name="city_id"/>
+                            <field name="village_id"/>
+                        </group>
+                        <group>
+                            <field name="student" widget="radio"/>
+                            <field name="faculty" attrs="{'invisible':['|',('student','not in',[2])]}"/>
+                            <field name="qualification" attrs="{'invisible':['|',('student','not in',[1])]}"/>
+                            <field name="job"/>
+                        <group>
+                        <group>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_volunteers" model="ir.actions.act_window">
+            <field name="name">Volunteers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">volunteers</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_volunteers_tree"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+     </data>
+</openerp>

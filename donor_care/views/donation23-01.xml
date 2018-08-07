@@ -1,0 +1,977 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--<record id="view_donor_care_form" model="ir.ui.view">
+            <field name="name">donor.care.form</field>
+            <field name="model">donation.donation</field>
+            <field name="inherit_id" ref="donation.donation_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='journal_id']" position="before">
+                    <field name="donation_section"/>
+                </xpath>
+            </field>
+        </record>-->
+        <record model="ir.ui.view" id="crm_case_form_view_oppor_care">
+            <field name="name">Activities</field>
+            <field name="model">crm.lead</field>
+            <field name="priority">405</field>
+            <field name="arch" type="xml">
+                <form string="Activities">
+                    <header>
+                        <button name="action_set_won" string="Mark Won"
+                                type="object" class="oe_highlight o_wow"
+                                attrs="{'invisible': ['|', ('active','=',False), ('probability', '=', 100)]}"/>
+                        <button name="%(crm.crm_lead_lost_action)d" string="Mark Lost"
+                                type="action" class="oe_highlight"
+                                context="{'default_lead_id': active_id}"
+                                attrs="{'invisible': [('active', '=', False)]}"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"
+                            options="{'fold_field': 'fold'}"
+                            domain="['&amp;', ('team_ids', '=', team_id), '|', ('type', '=', type), ('type', '=', 'both')]"
+                            attrs="{'invisible': [('active', '=', False)]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive"
+                                    attrs="{'invisible': [('active', '=', True), ('probability', '&lt;', 100)]}">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button class="oe_stat_button" type="object"
+                                context="{'partner_id': partner_id}"
+                                name="action_schedule_meeting" icon="fa-calendar">
+                                <div class="o_stat_info">
+                                    <field name="meeting_count" class="o_stat_value"/>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&lt;', 2)]}"> Meetings</span>
+                                    <span class="o_stat_text" attrs="{'invisible': [('meeting_count', '&gt;', 1)]}"> Meeting</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="label label-danger pull-right" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">Lost</div>
+                        <div class="label label-success pull-right" attrs="{'invisible': [('probability', '&lt;', 100)]}">Won</div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
+
+
+                            <h2 class="o_row" invisible="1">
+                                <div>
+                                    <label for="planned_revenue" class="oe_edit_only" />
+                                    <div class="o_row">
+                                        <field name="company_currency" invisible="1"/>
+                                        <field name="planned_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <span class="oe_grey"> at </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="probability" class="oe_edit_only"/>
+                                    <div class="o_row">
+                                        <field name="probability" widget="integer"/>
+                                        <span>%%</span>
+                                    </div>
+                                </div>
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"
+                                    on_change="on_change_partner_id(partner_id)"
+                                    domain="[('is_donor','=',True)]"
+                                    string="Donor"
+                                    context="{'default_name': partner_name, 'default_street': street, 
+                                        'default_street2': street2, 'default_city': city, 
+                                        'default_state_id': state_id, 'default_zip': zip, 
+                                        'default_country_id': country_id, 'default_function': function, 
+                                        'default_phone': phone, 'default_mobile': mobile, 
+                                        'default_fax': fax, 'default_email': email_from, 
+                                        'default_user_id': user_id, 'default_team_id': team_id}"/>
+                                <field name="email_from" string="Email" widget="email"/>
+                                <field name="phone" widget="phone"/>
+                            </group>
+
+                            <group>
+                                <field name="last_activity_id" readonly="1"/>
+                                <label for="next_activity_id"/>
+                                <div>
+                                    <div class="o_row mr16">
+                                        <field name="next_activity_id"
+                                               options="{'no_create': True, 'no_open': True}"
+                                               domain="['|',('team_id','=',False),('team_id','=',team_id)]"
+                                               on_change="onchange_next_activity_id(next_activity_id)"/>
+                                        <span class="oe_form_field"
+                                              attrs="{'invisible': ['|', ('next_activity_id', '=', False), ('date_action', '=', False)]}">&#160;on&#160;</span>
+                                        <field name="date_action" attrs="{'invisible': [('next_activity_id', '=', False)]}" placeholder="Choose a date..."/>
+                                        <div attrs="{'invisible': ['|', ('last_activity_id', '=', False), ('next_activity_id', '!=', False)]}">
+                                            <button name="log_next_activity_1" type="object" class="btn-link" attrs="{'invisible': [('next_activity_1','=',False)]}">
+                                                <field name="next_activity_1" readonly="1"/>
+                                            </button>
+                                            <span attrs="{'invisible': [('next_activity_2','=',False)]}">|</span>
+                                            <button name="log_next_activity_2" type="object" class="btn-link" attrs="{'invisible': [('next_activity_2','=',False)]}">
+                                                <field name="next_activity_2" readonly="1"/>
+                                            </button>
+                                            <span attrs="{'invisible': [('next_activity_3','=',False)]}">|</span>
+                                            <button name="log_next_activity_3" type="object" class="btn-link" attrs="{'invisible': [('next_activity_3','=',False)]}">
+                                                <field name="next_activity_3" readonly="1"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="o_row">
+                                        <field name="title_action" placeholder="e.g. Discuss proposal"
+                                               attrs="{'invisible': [('next_activity_id', '=', False)]}"/>
+                                        <div attrs="{'invisible': [('next_activity_id', '=', False)]}">
+                                            <button name="log_next_activity_done" string="Done" type="object" class="btn-link"/>
+                                            <button name="cancel_next_activity" string="Cancel" type="object" class="btn-link"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <field name="date_deadline"/>
+                            </group>
+
+                            <group>
+                                <field name="type" invisible="0" readonly="1" default="follow_up"/>
+                                <field name="user_id" string="Responsible" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_sale_salesman_all_leads'], 'team_id': team_id}"/>
+                                <field name="team_id" string="Team" widget="selection" readonly="1"/>
+                                <field name="donation_line_id"/>
+                            </group>
+                            <group>
+                                <field name="priority" widget="priority"/>
+                                <field name="tag_ids" widget="many2many_tags"/>
+                                <field name="lost_reason" attrs="{'invisible': [('active', '=', True)]}"/>
+                                <field name="date_conversion" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                        <page string="Internal Notes">
+                            <field name="description"/>
+                        </page>
+                        <page name="lead" string="Contact Information">
+                            <group>
+                                <group>
+                                    <field name="partner_name"/>
+                                    <label for="street" string="Address"/>
+                                    <div class="o_address_format">
+                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="contact_name"/>
+                                    <div class="o_row">
+                                        <field name="contact_name"/>
+                                        <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
+                                    </div>
+                                    <field name="function"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="opt_out"/>
+                                </group>
+                                <group string="Marketing">
+                                    <field name="campaign_id" />
+                                    <field name="medium_id" />
+                                    <field name="source_id" />
+                                </group>
+                                <group string="Misc" name="Misc">
+                                    <field name="day_open" groups="base.group_no_one"/>
+                                    <field name="day_close" groups="base.group_no_one"/>
+                                    <field name="referred"/>
+                                    
+                                </group>
+                            </group>
+                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="crm_opportunities_action2" model="ir.actions.act_window">
+            <field name="name">Follow Up</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"search_default_donation_line_id": active_id,"default_type":"follow_up","default_team_id":2,"default_donation_line_id": active_id}</field>
+            <field name="view_id" ref="crm_case_form_view_oppor_care"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to create a new Follow Up.</p>
+            </field>
+        </record>
+        
+        <record id="view_donor_care_feedback_form" model="ir.ui.view">
+            <field name="name">donor.care.feedback.form</field>
+            <field name="model">donation.line</field>
+            <field name="inherit_id" ref="donation.donation_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='main']" position="after"> <!---->
+                    <notebook>
+                        <page string="Donation Feedbacks" name="feedbacks">
+                            <field name="feedback_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="feedback_project" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name="feedback_date"/>
+                                    <field name="grantee_name" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name='medical_devices'/>
+                                </tree>
+                            </field>                   
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+        <record id="donation_line_care_tree" model="ir.ui.view">
+            <field name="name">donation.line.care.tree</field>
+            <field name="model">donation.line</field>
+            <field name="priority" eval="300"/>
+            <field name="arch"  type="xml">
+                <tree string="Donation Line" create="false" colors="blue:state==1;purple:state==4;green:state==2">
+            <!--invisible="not context.get('donation_line_main_view')"-->
+                    <field name="donation_section"/>
+                    <field name="recipt_number"/>
+                    <field name="donation_date"/>
+                    <field name="partner_id"/>
+                    <field name="product_id"/>
+                    <field name="quantity" invisible="1"/>
+                    <field name="unit_price" invisible="1"/>
+                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="amount"/>
+                    <field name="campaign_id"/>
+                    <field name="donation_collector"/>
+                    <field name="gov_id"/>
+                    <field name="donation_place"/>
+                    <field name="donation_method"/>
+                    <field name="tax_receipt_ok" string="Tax Receipt" invisible="1"/>
+                    <field name="in_kind"/>
+                    <field name="state"/>
+                    <field name="sequence" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="donation_line_care_form" model="ir.ui.view">
+            <field name="name">donation.line.care.form</field>
+            <field name="model">donation.line</field>
+            <field name="arch"  type="xml">
+                <!--<div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="action" string="Follow Up"
+                            name="%(crm_opportunities_action2)d"
+                            icon="fa-archive">
+                    </button>
+                </div>-->
+                <form string="Donation Line">
+                    <group name="main">
+                        <group>
+                            <field name="donation_id" invisible="not context.get('donation_line_main_view')"/>
+                            <field name="recipt_number" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="quantity" readonly="1" invisible="1"/>
+                            <field name="unit_price" readonly="1" invisible="1"/>
+                            <field name="analytic_account_id" invisible="1"/>
+                            <field name="amount" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="campaign_id" readonly="1"/>
+                            <field name="donation_collector" readonly="1"/>
+                            <field name="tax_receipt_ok" invisible="1"/>
+                            <field name="amount_company_currency" invisible="1"/>
+                            <field name="donation_date" readonly="1"/>
+                            <field name="in_kind" readonly="1"/>
+                            <field name="sequence" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Donation Feedbacks" name="feedbacks">
+                            <field name="feedback_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="feedback_project" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name="feedback_date"/>
+                                    <field name="grantee_name" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name='medical_devices'/>
+                                </tree>
+                            </field>                   
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="donation_line_care_graph" model="ir.ui.view">
+            <field name="name">donation.line.care.graph</field>
+            <field name="model">donation.line</field>
+            <field name="priority" eval="302"/>
+            <field name="arch"  type="xml">
+                <graph string="Donations Lines">
+                    <field name="donation_method" type="row"/>
+                    <field name="donation_place" type="column"/>
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <record id="donation_line_care_pivot" model="ir.ui.view">
+            <field name="name">donation.line.care.pivot</field>
+            <field name="model">donation.line</field>
+            <field name="priority" eval="303"/>
+            <field name="arch"  type="xml">
+                <pivot string="Donations Lines" type="pivot">
+                    <field name="donation_date" type="row"/>
+                    <field name="donation_method" type="row"/>
+                    <field name="donation_place" type="column"/>
+                    <field name="amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+        <record id="view_partner_care_tree" model="ir.ui.view">
+            <field name="name">res.partner.care.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="400" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="display_name"/>
+                    <field name="function" invisible="1"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="donor_classification"/>
+                    <field name="amount_total"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_partner_care_form" model="ir.ui.view">
+            <field name="name">res.partner.care.form</field>
+            <field name="model">res.partner</field>
+            <field name="priority" eval="401"/>
+            <field name="arch" type="xml">
+                <form string="Donors">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" groups="base.group_no_one"
+                                class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button"
+                                options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium", "size": [90, 90]}'/>
+                    <div class="oe_title">
+                        <field name="is_company"/><!--  invisible="1" -->
+                        <field name="company_type" widget="radio"
+                            class="oe_edit_only"
+                            on_change="on_change_company_type(company_type)"
+                            options="{'horizontal': true}"/>
+                        <h1>
+                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="parent_id"
+                                placeholder="Company"
+                                domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
+                                attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
+                                on_change="onchange_parent_id(parent_id)"/>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="type" attrs="{'invisible': [('parent_id','=', False)]}" groups="base.group_no_one"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <div class="oe_edit_only">
+                                    <button name="open_parent" type="object" string="(edit)" class="oe_link"
+                                        attrs="{'invisible': ['|', ('parent_id', '=', False), ('type', '!=', 'contact')]}"/>
+                                </div>
+                                
+                                <field name="street" placeholder="Street..." class="o_address_street"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="city" placeholder="City" class="o_address_city"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'zip': zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                            </div>
+                            <field name="website" widget="url" placeholder="e.g. www.odoo.com"/>
+                        </group>
+                        <group>
+                            <field name="function" placeholder="e.g. Sales Director"
+                                attrs="{'invisible': [('is_company','=', True)]}"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
+                            <field name="fax"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
+                            <field name="title" options='{"no_open": True}'
+                                attrs="{'invisible': [('is_company', '=', True)]}"/>
+                            <field name="lang"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                        </group>
+                    </group>
+
+                    <notebook colspan="4">
+                        <page string="Contacts &amp; Addresses" autofocus="autofocus">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_lang': lang,}">
+                                <kanban>
+                                    <field name="color"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="type"/>
+                                    <field name="email"/>
+                                    <field name="parent_id"/>
+                                    <field name="is_company"/>
+                                    <field name="function"/>
+                                    <field name="phone"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="state_id"/>
+                                    <field name="image"/>
+                                    <field name="lang"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '') + ' oe_kanban_global_click'">
+                                                <a t-if="!read_only_mode" type="delete" class="fa fa-times pull-right"/>
+                                                <div class="o_kanban_image">
+                                                    <img t-if="record.image.raw_value" t-att-src="'data:image/png;base64,'+record.image.raw_value"/>
+                                                    <t t-if="!record.image.raw_value">
+                                                        <img t-if="record.type.raw_value === 'delivery'" t-att-src='_s + "/base/static/src/img/truck.png"'/>
+                                                        <img t-if="record.type.raw_value === 'invoice'" t-att-src='_s + "/base/static/src/img/money.png"'/>
+                                                        <t t-if="record.type.raw_value !== 'invoice' &amp;&amp; record.type.raw_value !== 'delivery'">
+                                                            <img t-if="record.is_company.raw_value === true" t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                                            <img t-if="record.is_company.raw_value === false" t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                                        </t>
+                                                    </t>
+                                                </div>
+                                                <div class="oe_kanban_details">
+                                                    <field name="name"/>
+                                                    <div t-if="record.function.raw_value"><field name="function"/></div>
+                                                    <div t-if="record.email.raw_value"><field name="email"/></div>
+                                                    <div t-if="record.type.raw_value != 'contact'">
+                                                        <div>
+                                                            <field name="zip"/>
+                                                            <field name="city"/>
+                                                        </div>
+                                                        <field t-if="record.state_id.raw_value" name="state_id"/>
+                                                        <field name="country_id"/>
+                                                    </div>
+                                                    <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                    <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                    <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Contact / Address">
+                                    <sheet>
+                                        <field name="type" required="1" widget="radio" options="{'horizontal': true}"/>
+                                        <hr/>
+                                        <group>
+                                            <group attrs="{'invisible': [('type','=', 'contact')]}">
+                                                <label for="street" string="Address"/>
+                                                <div>
+                                                    <div class="o_address_format" name="div_address">
+                                                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                                                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                                        <field name="city" placeholder="City" class="o_address_city"/>
+                                                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}' on_change="onchange_state(state_id)" context="{'country_id': country_id, 'zip': zip}"/>
+                                                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                                    </div>
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                                                <field name="title" placeholder="e.g. Mr."
+                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="function" placeholder="e.g. Sales Director"
+                                                    attrs="{'invisible': [('type','&lt;&gt;', 'contact')]}"/>
+                                                <field name="email"/>
+                                                <field name="phone" widget="phone"/>
+                                                <field name="mobile" widget="phone"/>
+                                                <field name="comment" placeholder="internal note..."/>
+                                            </group>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
+                                        <field name="lang" invisible="True"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page name='internal_notes' string="Internal Notes">
+                            <field name="comment" placeholder="Internal note..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_kanban_care_view">
+            <field name="name">res.partner.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <kanban class="o_res_partner_kanban">
+                    <field name="color"/>
+                    <field name="display_name"/>
+                    <field name="title"/>
+                    <field name="email"/>
+                    <field name="parent_id"/>
+                    <field name="is_company"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="street"/>
+                    <field name="street2"/>
+                    <field name="zip"/>
+                    <field name="city"/>
+                    <field name="country_id"/>
+                    <field name="mobile"/>
+                    <field name="state_id"/>
+                    <field name="amount_total"/>
+                    <field name="donor_classification"/>
+                    <field name="category_id"/>
+                    <field name="image"/>
+                    <field name="type"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click o_res_partner_kanban">
+                                <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
+                                <div class="o_kanban_image">
+                                    <t t-if="record.image.raw_value">
+                                        <img t-att-src="kanban_image('res.partner', 'image_small', record.id.value)"/>
+                                    </t>
+                                    <t t-if="!record.image.raw_value">
+                                        <t t-if="record.type.raw_value === 'delivery'">
+                                            <img t-att-src='_s + "/base/static/src/img/truck.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                        </t>
+                                        <t t-if="record.type.raw_value === 'invoice'">
+                                            <img t-att-src='_s + "/base/static/src/img/money.png"' class="o_kanban_image oe_kanban_avatar_smallbox"/>
+                                         </t>
+                                        <t t-if="record.type.raw_value != 'invoice' &amp;&amp; record.type.raw_value != 'delivery'">
+                                            <t t-if="record.is_company.raw_value === true">
+                                                <img t-att-src='_s + "/base/static/src/img/company_image.png"'/>
+                                            </t>
+                                            <t t-if="record.is_company.raw_value === false">
+                                                <img t-att-src='_s + "/base/static/src/img/avatar.png"'/>
+                                            </t>
+                                        </t>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="oe_partner_heading"><field name="display_name"/></strong>
+                                    <ul>
+                                        <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
+                                        <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
+                                        <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
+                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                        <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                        <li t-if="record.amount_total.raw_value" class="o_text_overflow"><field name="amount_total"/></li>
+                                        <li t-if="record.donor_classification.raw_value" class="o_text_overflow"><field name="donor_classification"/></li>
+                                    </ul>
+                                    <div class="oe_kanban_partner_links"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <record id="donation_line_action" model="ir.actions.act_window">
+            <field name="name">Donations Lines</field>
+            <field name="res_model">donation.line</field>
+            <field name="view_mode">tree,form</field>
+            <!--<field eval="False" name="donation.donation_line_tree"/>-->
+            <field name="view_id" ref="donation.donation_line_tree"/>
+        </record>
+        
+        <record id="donation_line_care_action" model="ir.actions.act_window">
+            <field name="name">Donations Care Lines</field>
+            <field name="res_model">donation.line</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="donation_line_care_tree"/>
+        </record>
+        
+        <record id="view_partner_donor_care_tree" model="ir.actions.act_window">
+            <field name="name">Donors List</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_care_tree"/>
+            <field name="domain">[('is_donor','=', True)]</field>
+        </record>
+        
+        <record id="view_partner_donor_care_form" model="ir.actions.act_window">
+            <field name="name">Donors Form</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,form</field>
+            <!--<field name="view_type">form</field>-->
+            <field name="view_id" ref="res_partner_kanban_care_view"/>
+            <field name="domain">[('is_donor','=', True)]</field>
+        </record>
+        <!--<record id="view_partner_donor_care_form" model="ir.actions.act_window">
+            <field name="name">Donors Form</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_partner_care_tree"/>
+            <field name="domain">[('is_donor','=', True)]</field>
+        </record>-->
+        
+        <record id="view_partner_donor_form" model="ir.actions.act_window">
+            <field name="name">Donors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+    <!--<field name="view_id" ref="view_needed_cases_tree"/> -->
+            <field name="domain">[('is_donor','=', True)]</field>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <!--<record id="view_partner_donor_form" model="ir.actions.act_window">
+            <field name="name">Donors</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form,pivot,graph</field>
+            <field name="domain">[('is_donor','=', True)]</field>
+        <field name="view_id" ref="crm_case_form_view_oppor_care"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to create a new Follow Up.</p>
+            </field>
+        </record>-->
+        
+        <record model="ir.actions.act_window.view" id="view_partner_donor_form_kanban">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="res_partner_kanban_care_view"/>
+            <field name="act_window_id" ref="view_partner_donor_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="view_partner_donor_form_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_care_tree"/>
+            <field name="act_window_id" ref="view_partner_donor_form"/>
+        </record>
+
+        <!--<record model="ir.actions.act_window.view" id="view_partner_donor_form_form_2">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_partner_care_form"/>
+            <field name="act_window_id" ref="base.view_partner_form"/>-->
+            <!--<field name="context">{"default_type":"follow_up","default_team_id":2}</field>-->
+        <!--</record>-->
+        
+        <record id="crm_activity_view_form" model="ir.ui.view">
+        <field name="name">crm.activity.report.form</field>
+        <field name="model">crm.activity.report</field>
+        <field name="arch" type="xml">
+            <form string="Activities">
+                    <group name="main">
+                        <group>
+                            <field name="id" string="activity_id"/>
+                            <field name="stage_id"/>
+                            <field name="lead_type"/>
+                            <field name="subtype_id"/>
+                            <field name="author_id" readonly="1"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
+                            <field name="team_id"/>
+                            <field name="date" readonly="1"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                </form>
+        </field>
+    </record>
+
+    <record id="crm_activity_view_tree" model="ir.ui.view">
+        <field name="name">crm.activity.report.tree</field>
+        <field name="model">crm.activity.report</field>
+        <field name="arch" type="xml">
+            <tree string="Activities">
+                <field name="id" string="activity_id"/>
+                <field name="stage_id"/>
+                <field name="lead_type"/>
+                <field name="subtype_id"/>
+                <field name="author_id" readonly="1"/>
+                <field name="user_id" readonly="1"/>
+                <field name="company_id" readonly="1"/>
+                <field name="team_id"/>
+                <field name="date" readonly="1"/>
+                <field name="partner_id"/>
+            </tree>
+        </field>
+    </record>
+    
+    
+
+    <record id="crm_activity_action" model="ir.actions.act_window">
+        <field name="name">Activities</field>
+        <field name="res_model">crm.activity.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">Click to create a new activity.</p>
+        </field>
+    </record>
+    
+            
+        <record model="ir.ui.view" id="crm_case_pivot_view_leads">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <pivot string="Opportunities" display_quantity="true">
+                    <field name="stage_id" type="row"/>
+                    <field name="planned_revenue" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- CRM Lead Graph View -->
+        <record model="ir.ui.view" id="crm_case_graph_view_leads">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <graph string="Opportunities" type="bar">
+                    <field name="stage_id" type="row"/>
+                    <field name="planned_revenue" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- CRM Lead Tree View -->
+        <record model="ir.ui.view" id="crm_case_tree_view_oppor">
+            <field name="name">Leads</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <tree string="Leads" decoration-bf="message_needaction==True" decoration-muted="probability == 100">
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="create_date"/>
+                    <field name="name" string="Lead"/>
+                    <field name="contact_name"/>
+                    <field name="country_id"/>
+                    <field name="email_from"/>
+                    <field name="phone"/>
+                    <field name="stage_id"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="team_id"/>
+                    <field name="probability" invisible="1"/>
+                    <field name="campaign_id" invisible="1"/>
+                    <field name="referred" invisible="1"/>
+                    <field name="medium_id" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="crm_case_kanban_view_leads">
+            <field name="name">CRM - Leads Kanban</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="stage_id" class="o_kanban_small_column">
+                    <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description", "legend_priority": "Use of stars"}}'/>
+                    <field name="color"/>
+                    <field name="priority"/>
+                    <field name="planned_revenue"/>
+                    <field name="user_email"/>
+                    <field name="user_id"/>
+                    <field name="partner_address_email"/>
+                    <field name="message_needaction_counter"/>
+                    <field name="tag_ids"/>
+                    <field name="partner_id"/>
+                    <field name="active"/>
+                    <field name="company_currency"/>
+                    <templates>
+                        <field name="date_deadline"/>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click">
+                                <div class="o_dropdown_kanban dropdown">
+
+                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                        <span class="fa fa-bars fa-lg"/>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                        <t t-if="widget.editable"><li><a type="edit">Edit</a></li></t>
+                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                        <li t-if="! record.active.value"><a name="action_set_active" type="object">Unarchive</a></li>
+                                        <li t-if="record.active.value"><a name="action_set_unactive" type="object">Archive</a></li>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <div>
+                                        <field name="tag_ids"/>
+                                    </div>
+                                    <div>
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="text-muted">
+                                        <t t-if="record.planned_revenue.raw_value"><field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/></t> <span t-if="record.partner_id.value"> - <t t-esc="record.partner_id.value"/></span>
+                                    </div>
+                                    <div class="text-muted">
+                                        <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                        <span t-attf-class="#{red || ''}">
+                                            <field name="date_action"/>
+                                            <t t-if="record.date_action.raw_value"> : </t>
+                                            <field name="next_activity_id"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_kanban_footer">
+                                        <field name="priority" widget="priority" groups="base.group_user"/>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    </div>
+                                </div>
+                                <div class="oe_clear"></div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+        <record id="crm_opportunities_action" model="ir.actions.act_window">
+            <field name="name">Follow Up</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{"default_type":"follow_up","default_team_id":2}</field>
+            <!--<field name="view_id" ref="crm_case_form_view_oppor_care"/>-->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">Click to create a new Follow Up.</p>
+            </field>
+        </record>
+        
+        
+        <record id="view_crm_case_leads_filter" model="ir.ui.view">
+            <field name="name">CRM - Leads Search</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <search string="Search Leads">
+                    <field name="name" string="Lead / Customer" filter_domain="['|','|','|',('partner_name','ilike',self),('email_from','ilike',self),('contact_name','ilike',self),('name','ilike',self)]"/>
+                    <field name="tag_ids" string="Tag" filter_domain="[('tag_ids', 'ilike', self)]"/>
+                    <field name="team_id"/>
+                    <field name="user_id"/>
+                    <field name="donation_line_id"/>
+                    <field name="partner_id" operator="child_of" string="Customer"/>
+                    <field name="create_date"/>
+                    <field name="country_id"/>
+                    <separator />
+                    <filter string="My Leads"
+                            name="assigned_to_me"
+                            domain="[('user_id','=',uid)]"
+                            help="Leads that are assigned to me"/>
+                    <filter string="Unassigned" name="unassigned"
+                            domain="[('user_id','=', False)]"
+                            help="No salesperson"/>
+                    <separator />
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                    <separator />
+                    <filter string="Exclude Opt Out"
+                            name='not_opt_out' domain="[('opt_out', '=', False)]"
+                            help="Leads that did not ask not to be included in mass mailing campaigns"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Salesperson" name="groupby_salesperson" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" name="groupby_team" domain="[]" context="{'group_by':'team_id'}"/>
+                        <filter string="Stage" name="groupby_stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter name="customer" string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Campaign" name="groupby_campaign"  domain="[]" context="{'group_by':'campaign_id'}"/>
+                        <filter string="Source" name="groupby_source" domain="[]" context="{'group_by':'source_id'}"/>
+                        <filter string="Medium" name="groupby_channel" domain="[]" context="{'group_by':'medium_id'}"/>
+                        <filter string="Creation Month" name="groupby_createmonth" domain="[]" context="{'group_by':'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_kanban_view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_opportunities_action"/>
+            <field name="context">{"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_tree_view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_opportunities_action"/>
+            <field name="context">{"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_form_view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor_care"/>
+            <field name="act_window_id" ref="crm_opportunities_action"/>
+            <field name="context">{"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_kanban_view2">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="crm_opportunities_action2"/>
+            <field name="context">{"search_default_donation_line_id": [active_id],"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_tree_view2">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="crm_opportunities_action2"/>
+            <field name="context">{"search_default_donation_line_id": [active_id],"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="crm_opportunities_action_form_view2">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor_care"/>
+            <field name="act_window_id" ref="crm_opportunities_action2"/>
+            <field name="context">{"search_default_donation_line_id": [active_id],"default_type":"follow_up","default_team_id":2}</field>
+        </record>
+
+        <menuitem id="donor_care_menu" sequence="15"
+                  name="Donor Care"/>
+        <menuitem id="donation_title_menu" parent="donor_care_menu"
+                  sequence="1" name="Donations"/>
+        <menuitem id="donation_lines_menu" action="donation_line_care_action"
+                  parent="donation_title_menu" sequence="2"/>
+        <menuitem id="donor" action="view_partner_donor_form"
+                  parent="donation_title_menu" sequence="3" name="Donors"/>
+        <!--<menuitem id="donor_title_menu" parent="donor_care_menu"
+                  sequence="4" name="Donors"/>
+        <menuitem id="donor_list" action="view_partner_donor_care_tree"
+                  parent="donor_title_menu" sequence="5" name="Donors List"/>
+        <menuitem id="donor_form" action="view_partner_donor_care_form"
+                  parent="donor_title_menu" sequence="6" name="Donors Form"/>-->
+        <menuitem id="donor_activities_title_menu" parent="donor_care_menu"
+                  sequence="7" name="Activities"/>
+         <menuitem id="donor_opportunity_title_menu" parent="donor_activities_title_menu"
+                  sequence="8" name="Activity" action="crm_opportunities_action"/>
+        <menuitem id="donor_activity_title_menu" parent="donor_activities_title_menu"
+                  sequence="9" name="Activity Details" action="crm_activity_action"/>
+    </data>
+</openerp>

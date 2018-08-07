@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+<template id="report_purchaserequisition_committeemembers">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+
+                    <h2 class="text-center">مذكرة للعرض على السيد الدكتور</h2>
+                    <h2 class="text-center">الرئيس التنفيذي</h2>
+                    
+                    <h4 class="text-right">بالإشارة للطلب المقدم من إدارة تنمية الموارد المالية بشأن</h4>
+                    <t t-if="o.line_ids">
+                        <h3 class="text-right"></h3>
+                        <table class="table table-bordered text-right">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><strong>التاريخ</strong></th>
+                                    <!--<th class="text-center" groups="product.group_uom">
+                                        <strong>Product UoM</strong>
+                                    </th>-->
+                                    <th class="text-center"><strong>الكمية</strong></th>
+                                    <th class="text-center"><strong>الإسم</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line_ids">
+                                    <td class="text-center">
+                                        <span t-field="line_ids.schedule_date"/>
+                                    </td>
+                                     <!--<t>
+                                        <td class="text-center" groups="product.group_uom">
+                                            <span t-field="line_ids.product_uom_id.category_id.name"/>
+                                        </td>
+                                    </t>-->
+                                    <td class="text-center">
+                                        <span t-field="line_ids.product_qty"/>
+                                    </td>
+                                    <td class="text-center">
+                                        [ <span t-field="line_ids.product_id.code"/> ]
+                                        <span t-field="line_ids.product_id.name"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <h4 class="text-right">وذلك لإحتياج الادارة لها</h4>
+                    <h4 class="text-right">ويقترح تشكيل لجنة لإتمام الإجراءات من السادة</h4>
+                    <t t-if="o.members_ids">
+                        <h3 class="text-right"></h3>
+                        <table class="table table-bordered text-right">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><strong>صفة العضو</strong></th>
+                                    <th class="text-center"><strong>الإسم</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.members_ids" t-as="members_ids">
+                                    <td class="text-center">
+                                        <span t-field="members_ids.member_description"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="members_ids.member_id"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>

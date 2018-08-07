@@ -1,0 +1,680 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+<data>
+<template id="report_neededcases">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <font face="Arial"><h1 class="text-center">إستمارة بحث حالة</h1>
+                    <h2 class="text-center"><span t-field="o.name"/></h2></font>
+                    <div class="row mt32 mb32">
+                        <h2 class="col-xs-12 text-right">بيانات الباحث</h2><br/>
+                        <div class="col-xs-3 text-right">
+                            <span t-field="o.volunteer_phone2"/>
+                            <strong>:موبيل المتطوع 2</strong>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span t-field="o.volunteer_phone"/>
+                            <strong>:موبيل المتطوع</strong>
+                        </div>
+                         <div class="col-xs-5 text-right">
+                            <strong>اسم المتطوع:</strong>
+                            <span t-field="o.volunteer_id"/>
+                        </div>
+                        <h2 class="col-xs-12 text-right">البيانات العامة</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>النوع:</strong>
+                            <span t-field="o.gender"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>السن:</strong>
+                            <span t-field="o.age"/>
+                        </div>
+                        <div class="col-xs-5 text-right">
+                            <strong>الرقم القومي:</strong>
+                            <span t-field="o.national_number"/>
+                        </div><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>حالة البحث:</strong>
+                            <span t-field="o.accepted2"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>التليفون اﻷرضي:</strong>
+                            <span t-field="o.tel_phone"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الموبيل:</strong>
+                            <span t-field="o.mobile_phone"/>
+                        </div><br/><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>القرية/المنطقة:</strong>
+                            <span t-field="o.village_id"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>المركز/المدينة:</strong>
+                            <span t-field="o.city_id"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>المحافظة:</strong>
+                            <span t-field="o.gov_id"/>
+                        </div><br/>
+                        <div class="col-xs-8 text-right">
+                            <strong>العنوان بالتفصيل:</strong>
+                            <span t-field="o.address"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الشارع:</strong>
+                            <span t-field="o.street"/>
+                        </div><br/>
+                        <h2 class="col-xs-12 text-right">التعليم والعمل</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>نوع العمل:</strong>
+                            <span t-field="o.job_type"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>الوظيفة:</strong>
+                            <span t-field="o.job"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>التعليم:</strong>
+                            <span t-field="o.education"/>
+                        </div><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>لديك مشروع:</strong>
+                            <span t-field="o.have_project"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>اسم المشروع:</strong>
+                            <span t-field="o.project_other"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>نوع المشروع:</strong>
+                            <span t-field="o.project_type"/>
+                        </div><br/>
+                        <h2 class="col-xs-12 text-right">الحالة الاجتماعية</h2><br/>
+                         <div class="col-xs-4 text-right">
+                            <strong>عدد من يعولهم:</strong>
+                            <span t-field="o.number_depends"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>يعول/لا يعول:</strong>
+                            <span t-field="o.depends"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>الحالة الاجتماعية:</strong>
+                            <span t-field="o.marital_status"/>
+                        </div><br/>
+                        <h2 class="col-xs-12 text-right">أمراض لا تهدد الحياة</h2><br/>
+                            <div class="col-xs-6 text-right">
+                            <strong>مشاكل في الظهر والمفصل:</strong>
+                            <t t-if="o.is_back">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_back">
+                                لا يوجد
+                            </t>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <strong>: لا يعاني من أي أمراض</strong>
+                            <t t-if="o.is_disease">
+                                لا يعاني
+                            </t>
+                             <t t-if="not o.is_disease">
+                                 
+                            </t>
+                            <!--<strong>لا يعاني من أي أمراض:</strong>
+                            <span t-field="o.is_disease"/>-->
+                        </div><br/>
+                            <div class="col-xs-6 text-right">
+                                <strong>أخرى:</strong>
+                                <span t-field="o.other_disease"/>
+                            </div>
+                         <div class="col-xs-6 text-right">
+                                <strong>أمراض مزمنة لا تهدد الحياة:</strong>
+                            <t t-if="o.is_chronic_disease">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_chronic_disease">
+                                لا يوجد
+                            </t>
+                        </div><br/>
+                    <h2 class="col-xs-12 text-right">أمراض مزمنة تهدد الحياة</h2><br/>
+                            <div class="col-xs-6 text-right">
+                            <strong>فيروس سي:</strong>
+                            <t t-if="o.is_virus_C">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_virus_C">
+                                لا يوجد
+                            </t>
+                           <!--> <span t-field="o.is_virus_C"/> -->
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <strong>لا يعاني من أي أمراض مزمنة:</strong>
+                            <t t-if="o.is_not_chronic_disease">
+                                لا يعاني
+                            </t>
+                            <t t-if="not o.is_not_chronic_disease">
+                                
+                            </t>
+                            <!--<span t-field="o.is_not_chronic_disease"/>-->
+                        </div>
+                         <br/>
+                            <div class="col-xs-6 text-right">
+                            <strong>سرطان:</strong>
+                            <t t-if="o.is_cancer">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_cancer">
+                                لا يوجد
+                            </t>
+                             <!--<span t-field="o.is_cancer"/>-->
+                            </div>
+                         <div class="col-xs-6 text-right">
+                            <strong>فشل كلوي:</strong>
+                            <t t-if="o.is_kidney_fail">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_kidney_fail">
+                                لا يوجد
+                            </t>
+                            <!--<span t-if="o.is_kidney_fail==false"><t t-field="o.is_chronic_disease"/></span>-->
+                        </div>
+                        <br/>
+                            <div class="col-xs-12 text-right">
+                            <strong>أخرى:</strong>
+                            <span t-field="o.other_chronic_disease"/>
+                            </div> 
+                        <br/>
+                    </div>
+                    <h2 class="col-xs-12 text-right">الإعاقات</h2><br/>
+                        <div class="col-xs-3 text-right">
+                            <strong>بتر قدم:</strong>
+                            <t t-if="o.is_amputation_leg">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_amputation_leg">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_amputation_leg"/>-->
+                        </div>
+                         <div class="col-xs-3 text-right">
+                            <strong>بتر يد:</strong>
+                            <t t-if="o.is_amputation">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_amputation">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_amputation"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>عمى:</strong>
+                            <t t-if="o.is_blind">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_blind">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_blind"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>سليم:</strong>
+                            <t t-if="o.is_right">
+                                سليم
+                            </t>
+                            <t t-if="not o.is_right">
+                                
+                            </t>
+                            <!--<span t-field="o.is_right"/>-->
+                        </div>
+                        <br/>
+                        <div class="col-xs-3 text-right">
+                            <strong>مشكلة في القدم:</strong>
+                            <t t-if="o.is_problem_leg">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_problem_leg">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_problem_leg"/>-->
+                        </div>
+                         <div class="col-xs-3 text-right">
+                            <strong>مشكلة في اليد:</strong>
+                            <t t-if="o.is_problem">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_problem">
+                                لا يوجد
+                            </t>
+                            <span t-if="o.is_problem==false"><t t-field="o.is_problem"/></span>
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>شلل قدم:</strong>
+                            <t t-if="o.is_paralysis_leg">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_paralysis_leg">
+                                لا يوجد
+                            </t>
+                            <span t-field="o.is_paralysis_leg"/>
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>شلل يد:</strong>
+                            <t t-if="o.is_paralysis">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_paralysis">
+                                لا يوجد
+                            </t>
+                            <span t-field="o.is_paralysis"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-6 text-right">
+                            <strong>أخرى:</strong>
+                            <span t-if="o.other_disability==false"><t t-field="o.other_disability"/></span>
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>ضعف نظر شديد:</strong>
+                             <t t-if="o.is_weakness">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_weakness">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_weakness"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>إعاقة ذهنية:</strong>
+                            <t t-if="o.is_disability">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_disability">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_disability"/>-->
+                        </div>
+                        <br/>
+                    <h2 class="col-xs-12 text-right">المصروفات</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>أقساط أجهزة:</strong>
+                            <span t-field="o.device_payments"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>جمعيات:</strong>
+                            <span t-field="o.associations_expenses"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>إيجار شقة:</strong>
+                            <span t-field="o.department_rent"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>مصروف البيت:</strong>
+                            <span t-field="o.home_expenses"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>دروس أولاد :</strong>
+                            <span t-field="o.studying_child"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>مياه وغاز وكهرباء:</strong>
+                            <span t-field="o.water_gas"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>التدخين:</strong>
+                            <span t-field="o.smoking_expenses"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>العلاج:</strong>
+                            <span t-field="o.medicine_expenses"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>قسط دين شهري:</strong>
+                            <span t-field="o.monthly_dept"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-8 text-right">   
+                            <strong>المجموع:</strong>
+                            <span t-field="o.total_expenses"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>أخرى:</strong>
+                            <span t-field="o.other_expenses"/>
+                        </div><br/><br/><br/>
+                        <h2 class="col-xs-12 text-right">الدخل</h2>
+                        <h2 class="col-xs-12 text-right">دخل شهري لرب اﻷسرة</h2>
+                        <div class="col-xs-6 text-right">
+                            <strong>حرفة:</strong>
+                            <span t-field="o.person_craft"/>
+                        </div>
+                        <div class="col-xs-6 text-right">   
+                            <strong>وظيفة:</strong>
+                            <span t-field="o.person_job"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">دخل شهري لباقي اﻷسرة</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>معاش /نفقة مطلقات:</strong>
+                            <span t-field="o.family_salary"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>حرفة:</strong>
+                            <span t-field="o.family_craft"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>وظيفة:</strong>
+                            <span t-field="o.family_job"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">باقي الدخل للأسرة</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>تحصيل إيجار شقة أو محل:</strong>
+                            <span t-field="o.department_income"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>مساعدات أقارب:</strong>
+                            <span t-field="o.relatives_salary"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>من جمعيات خيرية:</strong>
+                            <span t-field="o.associations_salary"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-8 text-right">
+                            <strong>المجموع:</strong>
+                            <span t-field="o.total_income"/>
+                        </div>
+                        <div class="col-xs-4 text-right">   
+                            <strong>أخرى:</strong>
+                            <span t-field="o.other_income"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">الديون</h2><br/>
+                        <div class="col-xs-3 text-right">
+                            <strong>الصلة بالدائن:</strong>
+                            <span t-field="o.relation_depts"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>سبب الديون:</strong>
+                            <span t-field="o.reason_depts"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong> قيمة الديون:</strong>
+                            <span t-field="o.total_depts"/>
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>الديون:</strong>
+                            <span t-field="o.depts"/>
+                        </div>
+                        <h2 class="col-xs-12 text-right">اﻷملاك والشراكات</h2><br/>
+                        <div class="col-xs-3 text-right">
+                            <strong>منزل:</strong>
+                            <t t-if="o.is_house">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_house">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_house"/>-->
+                        </div>
+                         <div class="col-xs-3 text-right">
+                            <t t-if="o.is_earth">
+                                <strong>قيمة اﻷراضي الزراعية:</strong>
+                                <span t-field="o.total_earth"/>
+                            </t>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>أراضي:</strong>
+                            <t t-if="o.is_earth">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_earth">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_earth"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>ليس لديه أي أملاك:</strong>
+                            <t t-if="o.is_property">
+                                لا يوجد
+                            </t>
+                            <t t-if="not o.is_property">
+                                يوجد
+                            </t>
+                            <!--<span t-field="o.is_property"/>-->
+                        </div>
+                        <br/>
+                        <div class="col-xs-3 text-right">
+                            <strong>فرشة في البيت:</strong>
+                            <t t-if="o.is_farsha">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_farsha">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_farsha"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>محل/كشك:</strong>
+                            <t t-if="o.is_shop">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_shop">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_shop"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>عربة كارو:</strong>
+                            <t t-if="o.is_caro">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_caro">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_caro"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>موتوسيكل:</strong>
+                            <t t-if="o.is_motorbike">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_motorbike">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_motorbike"/>-->
+                        </div>
+                        <br/>
+                        <div class="col-xs-3 text-right">
+                            <t t-if="o.is_sheep">
+                                <strong>عدد اﻷغنام:</strong>
+                                <span t-field="o.number_sheep"/>
+                            </t>
+                            <!--<t t-if="not o.number_sheep">
+                                لا يوجد
+                            </t>-->
+                            <!---->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>أغنام:</strong>
+                            <t t-if="o.is_sheep">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_sheep">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_sheep"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            
+                            <t t-if="o.is_cow">
+                                <strong>قيمة المواشي:</strong>
+                                <span t-field="o.total_cow"/>
+                            </t>
+                            <!--<t t-if="not o.is_cow">
+                                لا يوجد
+                            </t>-->
+                            <!---->
+                        </div>
+                         <div class="col-xs-3 text-right">
+                            <strong>مواشي:</strong>
+                            <t t-if="o.is_cow">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_cow">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_cow"/>-->
+                        </div>
+                        <br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>أخرى:</strong>
+                            <span t-field="o.other_property"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>أملاك الوالد:</strong>
+                            <span t-field="o.father_property"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">المنزل</h2><br/>
+                        
+                         <div class="col-xs-6 text-right">
+                            <strong>نوع المنزل:</strong>
+                            <span t-field="o.house_type"/>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <strong>ملكية المنزل:</strong>
+                            <span t-field="o.house_ownership"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-6 text-right">   
+                            <strong>عدد الغرف:</strong>
+                            <span t-field="o.number_room"/>
+                        </div>
+                         <div class="col-xs-6 text-right">
+                            <strong>يوجد حمام:</strong>
+                            <span t-field="o.bathroom"/>
+                        </div>
+                        <br/>
+                        <div class="col-xs-6 text-right">   
+                            <strong>السقف:</strong>
+                            <span t-field="o.roof"/>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <strong>الحوائط:</strong>
+                            <span t-field="o.walls"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">اﻷجهزة الموجودة بالمنزل</h2><br/>
+                        <div class="col-xs-3 text-right">   
+                            <strong>بوتاجاز:</strong>
+                            <t t-if="o.is_cooker">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_cooker">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_cooker"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>ثلاجة:</strong>
+                            <t t-if="o.is_fridge">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_fridge">
+                                لا يوجد
+                            </t>
+                            <!--<span t-field="o.is_fridge"/>-->
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>تلفزيون:</strong>
+                            <!--<span t-field="o.is_television"/>-->
+                            <t t-if="o.is_television">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_television">
+                                لا يوجد
+                            </t>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>لا يوجد أجهزة:</strong>
+                            <t t-if="o.is_devices">
+                                لا يوجد
+                            </t>
+                            <t t-if="not o.is_devices">
+                             يوجد
+                            </t>
+                            <!--<span t-field="o.is_devices"/>-->
+                        </div>
+                        <br/>
+                         <div class="col-xs-6 text-right">
+                            <strong>أخرى:</strong>
+                            <span t-field="o.other_device"/>
+                        </div>
+                        <div class="col-xs-3 text-right">   
+                            <strong>غسالة:</strong>
+                            <t t-if="o.is_washer">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_washer">
+                                لا يوجد
+                            </t>
+                            <span t-field="o.is_washer"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>مراوح:</strong>
+                            <t t-if="o.is_fans">
+                                يوجد
+                            </t>
+                            <t t-if="not o.is_fans">
+                                لا يوجد
+                            </t>
+                            <span t-field="o.is_fans"/>
+                        </div>
+                        <br/>
+                        <h2 class="col-xs-12 text-right">الملاحظات</h2><br/>
+                        <div class="col-xs-12 text-right">
+                            <span t-field="o.notes"/>
+                        </div>
+                        
+                  <!--  <t t-if="o.city_ids">
+                        <h3></h3>
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th class="text-right"><strong>Name</strong></th>
+                                    <th class="text-right"><strong>Code</strong></th>
+                                    <th class="text-right"><strong>Country</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.city_ids" t-as="city_ids">
+                                    <td class="text-right">
+                                        <span t-field="city_ids.name"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="city_ids.code"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="city_ids.country_id"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t> -->
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
+

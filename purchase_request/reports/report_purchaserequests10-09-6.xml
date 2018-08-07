@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+<data>
+<template id="report_purchaserequests">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                        <h2 class="text-center"><span t-field="o.name"/> طلب مشتريات رقم</h2>
+                    <div class="row mt32 mb32">
+                         <!--<div class="col-xs-3">
+                            <strong>Source:</strong><br/>
+                            <span t-field="o.origin"/>
+                        </div> -->
+                        <div class="col-xs-6 text-right">
+                            <span t-field="o.request_type"/>
+                            <strong>: نوع الطلب</strong>
+                        </div>
+                        <!--<div class="col-xs-3">
+                            <strong>Request Reference:</strong><br/>
+                            <span t-field="o.name"/>
+                        </div>-->
+                        <div class="col-xs-6 text-right">
+                            <span t-field="o.date_start"/>
+                            <strong>: تاريخ الطلب</strong>
+                        </div>
+                        <br/>
+                        <div class="col-xs-6 text-right">
+                            <span t-field="o.assigned_to"/>
+                            <strong> :مدير الادارة</strong>
+                        </div>
+                        <!--<div class="col-xs-3">
+                            <strong>Picking Type:</strong><br/>
+                            <span t-field="o.picking_type_id"/>
+                        </div> -->
+                        <div class="col-xs-6 text-right">
+                            <span t-field="o.requested_by"/>
+                            <strong> :مقدم الطلب</strong>
+                        </div>
+                    </div>
+
+                    <t t-if="o.line_ids">
+                        <h3></h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><strong>السعر</strong></th>
+                                    <th class="text-center"><strong>الكمية</strong></th>
+                                    <!--<th class="text-center" groups="product.group_uom">
+                                        <strong>Product UoM</strong>
+                                    </th>-->
+                                    <th class="text-center"><strong>التاريخ</strong></th>
+                                    <th class="text-center"><strong>المواصفات</strong></th>
+                                    <th class="text-center"><strong>الصنف</strong></th>
+                                    <!--<th groups="analytic.group_analytic_accounting">
+                                        <strong>Analytic Account</strong>
+                                    </th> -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.line_ids" t-as="line_ids">
+                                    
+                                    
+                                    <td class="text-center">
+                                        <span t-field="line_ids.product_price"/>
+                                    </td>
+                                    <!--<t>
+                                        <td class="text-center" groups="product.group_uom">
+                                            <span t-field="line_ids.product_uom_id.category_id.name"/>
+                                        </td>
+                                    </t>-->
+                                    <td class="text-center">
+                                        <span t-field="line_ids.product_qty"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line_ids.date_required"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line_ids.specifications"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="line_ids.name"/>
+                                    </td>
+                                    <!--<td groups="analytic.group_analytic_accounting">
+                                        <span t-field="line_ids.analytic_account_id"/>
+                                    </td>-->
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <!--<h2 class="text-right">مقدم الطلب <![CDATA[&thinsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]> المدير المباشر</h2>
+                    <h2 class="text-right">المدير المباشر</h2>
+                    <h2 class="text-right">الحسابات</h2>
+                    <h2 class="text-right">المشتريات</h2>-->
+                    <br/>
+                    <div class="row mt32 mb32">
+                        <div class="col-xs-3">
+                            <h3 class="text-right">المشتريات</h3><br/>
+                        </div>
+                        <div class="col-xs-3">
+                            <h3 class="text-right"> الحسابات</h3><br/>
+                        </div>
+                        <div class="col-xs-3">
+                            <h3 class="text-right">المدير المباشر</h3><br/>
+                        </div>
+                        <div class="col-xs-3">
+                            <h3 class="text-right">مقدم الطلب</h3><br/>
+                        </div>    
+                    </div>
+                    <div class="oe_structure"/>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
+

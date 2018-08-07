@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_biometric_machine_form" model="ir.ui.view">
+		<field name="name">biometric.machine.form</field>
+		<field name="model">biometric.machine</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+		<form string="Biometric Machine" version="7.0">
+			<sheet>
+				<div class="oe_left">
+					<h1>
+						<field name="name" required="1" placeholder="Machine IP"/>
+					</h1>
+				</div>
+				<div class="oe_right oe_button_box">
+					<button name="download_attendance"  string="Download Data" class="oe_stat_button" icon="fa-download " type="object" confirm="Are you sure you want to do this?" />
+				</div>
+				<br/><br/><br/>
+				<group col="4"  colspan="4"> 
+					<field name="port" required="1"/>
+					<field name="location_id" required="1"/>
+					<!-- <field name="address_id"/> -->
+					<!-- <field name="company_id"/> -->
+				</group>
+			</sheet>
+		</form>
+		</field>
+	</record>
+
+	<record id="view_biometric_machine_tree" model="ir.ui.view">
+		<field name="name">biometric.machine.tree</field>
+		<field name="model">biometric.machine</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Biometric Machine" version="7.0">
+				<field name="name"/>
+				<field name="location_id"/>
+				<!-- <field name="address_id"/> -->
+				<!-- <field name="company_id"/> -->
+			</tree>
+		</field>
+	</record>
+
+	<record id="view_hr_employee_inherit_form" model="ir.ui.view">
+		<field name="name">hr.employee.form</field>
+		<field name="model">hr.employee</field>
+		<field name="inherit_id" ref="hr.view_employee_form"/>
+		<field name="arch" type="xml">
+			<data>
+				 <xpath expr="//page[@name='public']" position='after'>
+				 	<page string='ZK Number &amp; Location'>
+				 		<field name='zk_location_line_ids'>
+				 			<tree editable='bottom'>
+				 				<field name='location_id' on_change='onchange_location_id(location_id,zk_num,emp_id)'/>
+				 				<field name='zk_num' on_change='onchange_location_id(location_id,zk_num,emp_id)'/>
+				 				<field name='emp_id' invisible='1'/>
+				 				<field name='emp_location' invisible='1'/>
+				 				<field name='zk_location' invisible='1'/>
+				 			</tree>
+				 		</field>
+				 	</page>
+				 </xpath>
+				<!-- <xpath expr="//h1" position="after">
+					<label string="ZK ID" style="font-weight: bold;" class="oe_edit_only"/>
+					<field name="zk_num" placeholder="ZK ID"/>
+					<field name="location_id"/>
+				</xpath> -->
+			</data>
+		</field>
+	</record>
+
+	<record id="open_view_attendance_machine" model="ir.actions.act_window">
+            <field name="name">Attendances</field>
+            <field name="res_model">biometric.machine</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+	
+	
+		
+		
+	
+	<menuitem id="id_add_bio_machine" parent="hr.menu_hr_root" sequence="15" name="Biometric Device Manager" />	
+
+    	<menuitem id="id_add_bio_machine_new" parent="id_add_bio_machine"  name="Attendance Machine" action="open_view_attendance_machine" />	
+	
+	
+	
+        
+     </data>
+</openerp>

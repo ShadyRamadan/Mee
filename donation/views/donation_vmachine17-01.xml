@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+
+<record id="donation_vmachine_form" model="ir.ui.view">
+    <field name="name">donation.vmachine.form</field>
+    <field name="model">donation.vmachine</field>
+    <field name="arch" type="xml">
+        <form string="Donation Visa Machines">
+            <group name="main">
+                <field name="code"/>
+                <field name="donation_section" invisible="1"/>
+                <field name="donation_method" invisible="1"/>
+                <field name="bank_id"/>
+                <field name="responsible"/>
+                <field name="nota"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="donation_vmachine_tree" model="ir.ui.view">
+    <field name="name">donation.vmachine.tree</field>
+    <field name="model">donation.vmachine</field>
+    <field name="arch" type="xml">
+        <tree string="Donation Visa Machine">
+            <field name="code"/>
+            <field name="donation_section" invisible="1"/>
+            <field name="donation_method" invisible="1"/>
+            <field name="bank_id"/>
+            <field name="responsible"/>
+        </tree>
+    </field>
+</record>
+
+<record id="donation_vmachine_action" model="ir.actions.act_window">
+    <field name="name">Donation Visa Machine</field>
+    <field name="res_model">donation.vmachine</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="donation_vmachine_menu" action="donation_vmachine_action"
+    parent="donation_config_menu" sequence="36" name="Donation Visa Machines"/>
+</data>
+</odoo>

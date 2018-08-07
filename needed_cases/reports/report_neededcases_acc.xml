@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+<data>
+<template id="report_neededcases_acc">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <font face="Arial"><h1 class="text-center">إستمارة إعتماد</h1>
+                    <h2 class="text-center"><span t-field="o.name"/></h2></font>
+                    <div class="row mt32 mb32">
+                        <h2 class="col-xs-12 text-right">بيانات المعتمد</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <span t-field="o.volunteer_phone2_auth"/>
+                            <strong>:موبيل المتطوع 2</strong>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span t-field="o.volunteer_phone_auth"/>
+                            <strong>:موبيل المتطوع</strong>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>اسم المتطوع:</strong>
+                            <span t-field="o.volunteer_id_auth"/>
+                        </div>
+                        <h2 class="col-xs-12 text-right">البيانات العامة</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>النوع:</strong>
+                            <span t-field="o.gender"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>السن:</strong>
+                            <span t-field="o.age"/>
+                        </div>
+                        <div class="col-xs-5 text-right">
+                            <strong>الرقم القومي:</strong>
+                            <span t-field="o.national_number"/>
+                        </div><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>حالة البحث:</strong>
+                            <span t-field="o.accepted2"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>التليفون اﻷرضي:</strong>
+                            <span t-field="o.tel_phone"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الموبيل:</strong>
+                            <span t-field="o.mobile_phone"/>
+                        </div><br/><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>القرية/المنطقة:</strong>
+                            <span t-field="o.village_id"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>المركز/المدينة:</strong>
+                            <span t-field="o.city_id"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>المحافظة:</strong>
+                            <span t-field="o.gov_id"/>
+                        </div><br/>
+                        <div class="col-xs-8 text-right">
+                            <strong>العنوان بالتفصيل:</strong>
+                            <span t-field="o.address"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الشارع:</strong>
+                            <span t-field="o.street"/>
+                        </div><br/>
+                    <h2 class="col-xs-12 text-right">بيانات الإعتماد</h2><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>الخبرة في المشروع:</strong>
+                            <span t-field="o.experiences_project"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>قصة اﻷسرة:</strong>
+                            <span t-field="o.story"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>اذا كان الفرق بين الدخل والمصروفات اكبر من 500 جنيه من أين يتوفر المبلغ ؟ :</strong>
+                            <span t-field="o.provide_money"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>طريقة سداد الدين:</strong>
+                            <span t-field="o.pay_depts"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong> بتعرف تسوق:</strong>
+                            <span t-field="o.driving"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>عرفت عن الجمعية / المشروع ازاي ؟</strong>
+                            <span t-field="o.know_project"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>المشروع هيفرق معاك في ايه ؟</strong>
+                            <span t-field="o.tight_life"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong> هل تقدر تسدد قسط شهري 500 جنية للجمعية ؟</strong>
+                            <span t-field="o.pay_money"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>المخدرات:</strong>
+                            <span t-field="o.drugs"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>التدخين:</strong>
+                            <span t-field="o.smoking"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>أحكام سابقة:</strong>
+                            <span t-field="o.previous_issues"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>مشاريع سابقة:</strong>
+                            <span t-field="o.previous_projects"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>اسم المشروع:</strong>
+                            <span t-field="o.what_project"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>لو جالك تروسيكل هتعمل بيه ايه ؟</strong>
+                            <span t-field="o.trosikle"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>هل لديك خبرة في مجال معين او صنعة ؟</strong>
+                            <span t-field="o.experience_work"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>هل تفضل الصنعة أو التروسيكل:</strong>
+                            <span t-field="o.profession_trosikle"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>هل تفضل مبلغ شهري ثابت 500 جنية:</strong>
+                            <span t-field="o.static_money"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>رأي المعتمد:</strong>
+                            <span t-field="o.authorized_opinion"/>
+                        </div><br/>
+                        <div class="col-xs-12 text-right">
+                            <strong>السبب:</strong>
+                            <span t-field="o.authorized_reason"/>
+                        </div><br/>
+                    <div class="oe_structure"/>
+                </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
+

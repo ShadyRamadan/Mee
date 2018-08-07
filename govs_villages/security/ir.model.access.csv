@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_govs_villages_user,govs.villages,model_govs_villages,group_govs_villages_user,1,1,1,1
+access_govs_villages_manager,govs.villages,model_govs_villages,group_govs_villages_manager,1,1,1,1

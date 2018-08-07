@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+
+<record id="donation_form" model="ir.ui.view">
+    <field name="name">donation.form</field>
+    <field name="model">donation.donation</field>
+    <field name="arch"  type="xml">
+        <form string="Donation">
+            <header>
+                <button type="object" name="transfer" string="Transfer"
+                    class="oe_highlight" 
+                    attrs="{'invisible': [('state','not in',1)]}"
+                    groups="donation.group_donation_user"/>
+                <button type="object" name="validate" string="Validate"
+                    class="oe_highlight" 
+                    attrs="{'invisible': [('state','not in',2)]}"
+                    groups="donation.group_donation_finance"
+                    invisible="context.get('recurring_view')"/>
+                <button type="object" name="to_bank" string="To Bank"
+                    class="oe_highlight" 
+                    invisible="1"
+                    groups="donation.group_donation_finance"
+                    />
+                <button type="object" name="cancel2draft"
+                    string="Back to Draft" 
+                    attrs="{'invisible': [('state','not in',5)]}"
+                    groups="donation.group_donation_finance"/>
+                <button type="object" name="done2cancel" string="Cancel"
+                    groups="donation.group_donation_finance"
+                    attrs="{'invisible': [('state','not in',3)]}"/>
+                <button type="object" name="save_default_values"
+                    string="Save Default Values" invisible="1"/>
+                <field name="state" widget="statusbar"
+                    invisible="context.get('recurring_view')"/>
+            </header>
+            <sheet>
+                <group name="main">
+                    <group name="manual">
+                        <field name="name" string="Donation Reference" readonly="1"/>
+                        <field name="payment_ref" string="Donation Reference" invisible="1"/>
+                        <field name="donation_section" string="Section" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                        <field name="donation_by" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                        
+                        <field name="journal_id" widget="selection" readonly="1" invisible="1"/> 
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="is_readonly" invisible="1"/>
+                        <field name="is_editable" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="donation_date" required="1" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                        <field name='product_id' invisible="1" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                        <field name="company_id" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                        <!--<field name="account_bank_id" attrs="{'required':[('state','=',3)],'invisible':[('state','not in',3)]}"/>-->
+                        <field name="account_id" readonly="1" invisible="1"/>
+                        <!--<field name="check_total" groups="donation.group_donation_check_total"/>-->
+                    </group>
+                    <group name="auto" invisible="0">
+                        <field name="partner_id" domain="[('is_donor', '=', True)]" invisible="1"/>
+                        <field name="commercial_partner_id" invisible="1"/>
+                        <field name="campaign_id" required="0" invisible="1"/>
+                        <field name="gov_id" invisible="1"/>
+                        <field name="donation_place" invisible="1"/>
+                        <field name="donation_method" invisible="1"/>
+                        <field name="tags_id" widget="many2many_tags" invisible="1"/>
+                        <field name="tax_receipt_option" invisible="1"/>
+                        <field name="tax_receipt_total" invisible="1"/>
+                        <field name="tax_receipt_id" invisible="1"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Donation Lines" name="lines">
+                        <field name="line_ids" nolabel="1">
+                            <tree>
+                                <field name="donation_type"/>
+                                <field name="partner_id" domain="[('is_donor', '=', True)]"/>
+                                <field name="recipt_number"/>
+                                <field name="quantity"/>
+                                <field name="unit_price"/>
+                                <field name="it_amount"/>
+                                <field name="amount" groups="donation.group_donation_user"/>
+                                <field name="fundstream_id" domain="[('fund_active', '=', True)]" required="1"/>
+                                <field name="donation_place" required="1" string="Point"/>
+                                <field name="donation_collector" domain="[('is_collector', '=', True)]"/>
+                                <field name="donation_method" invisible="0" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                
+                                <field name="treasury_recipt"/>
+                                
+                                <field name="vmachine_id" invisible="1"/>
+                                <field name="company_id" readonly="1" invisible="1"/>
+                                <field name="analytic_account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="analytic_account2" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" />
+                                <field name="tags_id" widget="many2many_tags" readonly="0" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="in_kind" invisible="1"/>
+                                <field name="product_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                            </tree>
+                            <form string="Donation Line">
+                                <group>
+                                    <group>
+                                        <field name="is_editable" invisible="1"/>
+                                        <field name="donation_type" required="1"/>
+                                        <field name="product_id" attrs="{'invisible': [('in_kind','=', False)],'required': [('in_kind','=', True)]}"/>
+                                        <field name="type_account_id" invisible="1"/>
+                                        <field name="partner_id" domain="[('is_donor', '=', True)]" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="recipt_number" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="treasury_recipt"/>
+                                        <field name="quantity" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="unit_price" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="it_amount"/>
+                                        <field name="amount" groups="donation.group_donation_finance"/>
+                                    </group>
+                                    <group>
+                                        <field name="fundstream_id" domain="[('fund_active', '=', True)]" required="1" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="donation_place" string="Point" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="donation_collector" domain="[('is_collector', '=', True)]" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="donation_method" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" required="1" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="donation_method_tag" invisible="1"/>
+                                        <field name="payment_type" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="bank_id" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="chech_number" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="due_date" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="vmachine_id"  string='POS Machine' attrs="{'readonly': [('is_editable','=', True)]}"/>
+                                        <field name="in_kind"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="company_id" readonly="1" invisible="1"/>
+                                    
+                                    <field name="analytic_account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    <field name="analytic_account2" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" />
+                                    <field name="account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                    
+                                    <field name="tags_id" widget="many2many_tags" invisible="1" readonly="0" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                </group>
+                            </form>
+                        </field>
+                        <group>
+                            <group name="subtotal" class="oe_subtotal_footer oe_left">
+                                <field name="it_amount_total" string=" IT Total"
+                                   class="oe_subtotal_footer_separator"/>
+                            </group>
+                            <group name="subtotal" class="oe_subtotal_footer oe_right">
+                                <field name="amount_total" string="Total"
+                                   class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </group>
+                        <group name="layout_fix">
+                            <field name="company_currency_id" invisible="1"/>
+                        </group>                    
+                    </page>
+                    <page string="Other Information" name="other" group="donation.group_donation_finance">
+                        <group name="other">
+                            <field name="move_id"/>
+                            <field name="move_id_bank"/>
+                            <field name="move_analytic_id"/>
+                            <field name="amount_total_company_currency"
+                                groups="base.group_multi_currency"/>
+                        </group>
+                    </page>
+                </notebook>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>
+    </field>
+</record>
+
+<record id="donation_tree" model="ir.ui.view">
+    <field name="name">donation.tree</field>
+    <field name="model">donation.donation</field>
+    <field name="arch"  type="xml">
+        <tree string="Donation" colors="blue:state==1;purple:state==4;green:state==2">
+            <field name="name"/>
+            <field name="number" invisible="1"/>
+            <field name="donation_date"/>
+            <field name="donation_by" invisible="context.get('partner_view')"/>
+            <field name="company_id" groups="base.group_multi_company"/>
+            <field name="donation_section"/>
+            <field name='product_id' invisible="1"/>
+            <field name="it_amount_total" string=" IT Total"/>
+            <field name="amount_total"/>
+            <field name="state" invisible="context.get('recurring_view')"/>
+            <field name="tags_id" invisible="1"/>
+            <field name="journal_id" invisible="1"/>
+            <field name="currency_id" invisible="1" groups="base.group_multi_currency"/>
+        </tree>
+    </field>
+</record>
+
+
+<record id="donation_search" model="ir.ui.view">
+    <field name="name">donation.search</field>
+    <field name="model">donation.donation</field>
+    <field name="arch"  type="xml">
+        <search string="Search Donations">
+            <filter name="draft" string="Draft" domain="[('state', '=', 1)]" />
+            <filter name="done" string="Done" domain="[('state', '=', 3)]" />
+            <field name="number"/>
+            <field name="product_id"/>
+            <field name="company_id"/>
+            <field name="donation_date"/>
+            <field name="donation_by"/>
+            <field name="donation_section"/>
+            <field name="partner_id" invisible="1"/>
+            <group string="Group By" name="groupby">
+                <filter name="date_groupby" string="Date" context="{'group_by': 'donation_date'}"/>
+                <filter name="product_groupby" string="Product" context="{'group_by': 'product_id'}"/>
+                <filter name="state_groupby" string="State" context="{'group_by': 'state'}"/>
+                <filter name="currency_groupby" string="Currency" context="{'group_by': 'currency_id'}"/>
+                <filter name="company_groupby" string="Location" context="{'group_by': 'company_id'}"/>
+                <filter name="partner_groupby" string="Partner" context="{'group_by': 'partner_id'}"/>
+                <filter name="journal_groupby" string="Payment Method" context="{'group_by': 'journal_id'}" invisible="1"/>
+                <filter name="tax_receipt_option_groupby" string="Tax Receipt Option" context="{'group_by': 'tax_receipt_option'}" invisible="1"/>
+                <filter name="commercial_partner_groupby" string="Parent Partner" context="{'group_by': 'commercial_partner_id'}" invisible="1"/>
+                <filter name="partner_country_groupby" string="Partner Country" context="{'group_by': 'country_id'}" invisible="1"/>
+                <filter name="campaign_groupby" string="Campaign" context="{'group_by': 'campaign_id'}" invisible="1"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="donation_graph" model="ir.ui.view">
+    <field name="name">donation.graph</field>
+    <field name="model">donation.donation</field>
+    <field name="arch"  type="xml">
+        <graph string="Donations">
+            <field name="donation_section" type="row"/>
+            <!--<field name="product_id" type="column"/>-->
+            <field name="it_amount_total" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="donation_pivot" model="ir.ui.view">
+    <field name="name">donation.pivot</field>
+    <field name="model">donation.donation</field>
+    <field name="arch"  type="xml">
+        <pivot string="Donations" type="pivot">
+            <field name="donation_date" type="row"/>
+            <field name="donation_section" type="row"/>
+            <!--<field name="product_id" type="column"/>-->
+            <field name="it_amount_total" type="measure"/>
+        </pivot>
+    </field>
+</record>
+
+
+<record id="donation_line_tree" model="ir.ui.view">
+    <field name="name">donation.line.tree</field>
+    <field name="model">donation.line</field>
+    <field name="arch"  type="xml">
+        <tree string="Donation Line" create="false" colors="blue:state==1;purple:state==4;green:state==2">
+            <field name="donation_id"/>
+            <field name="donation_date"/>
+            <field name="donation_type"/>
+            <field name="type_account_id" invisible="1"/>
+            <field name="partner_id"/>
+            <field name="recipt_number"/>
+            <field name="product_id" invisible="1"/>
+            <field name="quantity" invisible="1"/>
+            <field name="unit_price" invisible="1"/>
+            <field name="it_amount"/>
+            <field name="amount"/>
+            <field name="donation_section"/>
+            <field name="fundstream_id"/>
+            <field name="donation_place" string="Point"/>
+            <field name="donation_collector"/>
+            <field name="donation_method"/>
+            <field name="company_id"/>
+            <field name="state"/>
+            <field name="tags_id" widget="many2many_tags"/>
+            
+            <field name="tax_receipt_ok" string="Tax Receipt" invisible="1"/>
+            <field name="in_kind" invisible="1"/>
+            <field name="gov_id" invisible="1"/>
+            <field name="sequence" invisible="1"/>
+            <field name="analytic_account_id" invisible="1"/>
+            <field name="campaign_id" invisible="1"/>
+        </tree>
+    </field>
+</record>
+
+<record id="donation_line_form" model="ir.ui.view">
+    <field name="name">donation.line.form</field>
+    <field name="model">donation.line</field>
+    <field name="arch"  type="xml">
+        <form string="Donation Line">
+            <!--<group name="main">
+                <field name="donation_id" invisible="not context.get('donation_line_main_view')"/>
+                <field name="partner_id" readonly="1"/>
+                <field name="product_id" readonly="1"/>
+                <field name="quantity" readonly="1"/>
+                <field name="recipt_number" readonly="1"/>
+                <field name="unit_price" readonly="1"/>
+                <field name="analytic_account_id" invisible="1"/>
+                <field name="amount" readonly="1"/>
+                <field name="campaign_id" readonly="1"/>
+                <field name="donation_collector" readonly="1"/>
+                <field name="tax_receipt_ok" invisible="1"/>
+                <field name="amount_company_currency" invisible="1"/>
+                
+                <field name="in_kind" readonly="1"/>
+                <field name="sequence" invisible="1"/>
+                
+            </group>-->
+            <group name="main">
+                <group>
+                    <field name="donation_id" attrs="{'readonly': [('is_editable','=', True)]}" invisible="not context.get('donation_line_main_view')"/>
+                    <field name="donation_type"/>
+                    <field name="type_account_id" invisible="1"/>
+                    <field name="partner_id" attrs="{'readonly': [('is_editable','=', True)]}" domain="[('is_donor', '=', True)]"/>
+                    <field name="recipt_number" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="quantity" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="unit_price" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="it_amount" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="amount" groups="donation.group_donation_user"/>
+                </group>
+                <group>
+                    <field name="state" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="fundstream_id" domain="[('fund_active', '=', True)]" attrs="{'readonly': [('is_editable','=', True)]}" required="1"/>
+                    <field name="donation_place" string="Point" required="1" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="donation_collector" domain="[('is_collector', '=', True)]" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="donation_method" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="payment_type" attrs="{'readonly': [('is_editable','=', True)]}"/>
+                    <field name="bank_id" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                    <field name="chech_number" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                    <field name="due_date" attrs="{'required':[('payment_type','=',2)],'invisible':[('payment_type','not in',2)],'readonly': [('is_editable','=', True)]}"/>
+                    <field name="vmachine_id" string='POS Machine' attrs="{'readonly': [('is_editable','=', True)]}"/>
+                </group>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="donation_line_search" model="ir.ui.view">
+    <field name="name">donation.line.search</field>
+    <field name="model">donation.line</field>
+    <field name="arch"  type="xml">
+        <search string="Search Donations Lines">
+            <filter name="draft" string="Draft" domain="[('state', '=', 1)]" />
+            <filter name="done" string="Done" domain="[('state', '=', 3)]" />
+            <filter name="cash" string="Cash" domain="[('payment_type', '=', 1)]" />
+            <filter name="check" string="Check" domain="[('payment_type', '=', 2)]" />
+            <field name="donation_id"/>
+            <field name="donation_type"/>
+            <field name="partner_id"/>
+            <field name="product_id"/>
+            <field name="recipt_number"/>
+            <field name="company_id"/>
+            <field name="donation_date"/>
+            <field name="donation_by"/>
+            <field name="donation_section"/>
+            <field name="it_amount"/>
+            <field name="amount"/>
+            <field name="fundstream_id"/>
+            <field name="donation_place" string="Point"/>
+            <field name="donation_collector"/>
+            <field name="donation_method"/>
+            <field name="payment_type"/>
+            <field name="chech_number"/>
+            <field name="vmachine_id"/>
+            <group string="Group By" name="groupby">
+                <filter name="type_groupby" string="Donation Type" context="{'group_by': 'donation_type'}"/>
+                <filter name="date_groupby" string="Date" context="{'group_by': 'donation_date'}"/>
+                <filter name="product_groupby" string="Product" context="{'group_by': 'product_id'}"/>
+                <filter name="state_groupby" string="State" context="{'group_by': 'state'}" invisible="1"/>
+                <filter name="currency_groupby" string="Currency" context="{'group_by': 'currency_id'}"/>
+                <filter name="company_groupby" string="Location" context="{'group_by': 'company_id'}"/>
+                <filter name="partner_groupby" string="Partner" context="{'group_by': 'partner_id'}"/>
+                
+                <filter name="section_groupby" string="Section" context="{'group_by': 'donation_section'}"/>
+                <filter name="fundstream_groupby" string="Fundstream" context="{'group_by': 'fundstream_id'}"/>
+                <filter name="place_groupby" string="Point" context="{'group_by': 'donation_place'}"/>
+                <filter name="collector_groupby" string="Collector" context="{'group_by': 'donation_collector'}"/>
+                <filter name="method_groupby" string="Method" context="{'group_by': 'donation_method'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
+<record id="donation_line_graph" model="ir.ui.view">
+    <field name="name">donation.line.graph</field>
+    <field name="model">donation.line</field>
+    <field name="arch"  type="xml">
+        <graph string="Donations Lines">
+            <field name="donation_method" type="row"/>
+            <field name="donation_place" type="column"/>
+            <field name="amount" type="measure"/>
+        </graph>
+    </field>
+</record>
+
+<record id="donation_line_pivot" model="ir.ui.view">
+    <field name="name">donation.line.pivot</field>
+    <field name="model">donation.line</field>
+    <field name="arch"  type="xml">
+        <pivot string="Donations Lines" type="pivot">
+            <field name="donation_date" type="row"/>
+            <field name="donation_method" type="row"/>
+            <field name="donation_place" type="column"/>
+            <field name="amount" type="measure"/>
+        </pivot>
+    </field>
+</record>
+
+<record id="donation_action" model="ir.actions.act_window">
+    <field name="name">Donations</field>
+    <field name="res_model">donation.donation</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+</record>
+
+<record id="donation_line_action" model="ir.actions.act_window">
+    <field name="name">Donations Lines</field>
+    <field name="res_model">donation.line</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+</record>
+
+<record id="view_partner_donor_form" model="ir.actions.act_window">
+    <field name="name">Donors</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">kanban,tree,form,pivot,graph</field>
+    <!--<field name="view_id" ref="view_needed_cases_tree"/> -->
+    <field name="domain">[('is_donor','=', True)]</field>
+    <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+</record>
+
+<record id="view_partner_collector_form" model="ir.actions.act_window">
+    <field name="name">Collectors</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">res.partner</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">kanban,tree,form,pivot,graph</field>
+    <!--<field name="view_id" ref="view_needed_cases_tree"/>--> 
+    <field name="domain">[('is_collector','=', True)]</field>
+    <field name="help">If you are working on the Lifemakers projects, you can manage the information of collectors you are working on from here.</field>
+</record>
+
+<record id="donation_action_transfer" model="ir.actions.act_window">
+    <field name="name">Donations</field>
+    <field name="res_model">donation.donation</field>
+    <field name="view_mode">tree,form,pivot,graph</field>
+    <field name="domain">[('state','=', 2)]</field>
+</record>
+
+<menuitem id="donation_menu_transfer" action="donation_action_transfer"
+    parent="donation_title_menu" 
+    sequence="11" groups="group_donation_finance" name="Donations-Transfer"/>
+
+<menuitem id="donation_top_menu" sequence="15" 
+    name="Donations" groups="group_donation_viewer"/>
+
+<menuitem id="donation_title_menu" parent="donation_top_menu"
+    sequence="15" name="Donations"/>
+
+<menuitem id="donation_menu" action="donation_action"
+    parent="donation_title_menu" sequence="10"/>
+    
+<menuitem id="donation_lines_menu" action="donation_line_action"
+    parent="donation_title_menu" sequence="12"/>
+
+<menuitem id="donation_config_menu" parent="donation_top_menu"
+    name="Configuration" sequence="30"
+    groups="donation.group_donation_manager"/>
+
+<menuitem id="donor" action="view_partner_donor_form"
+    parent="donation_title_menu" sequence="50" name="Donors" />
+    
+<menuitem id="collector" action="view_partner_collector_form"
+    parent="donation_title_menu" sequence="50" name="Collectors" />
+
+<record id="donation_product_action" model="ir.actions.act_window">
+    <field name="name">Products</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="context">{'search_default_filter_donation': 1, 'default_donation': 1}</field>
+</record>
+
+<menuitem id="donation_products" action="donation_product_action"
+    parent="donation_config_menu"/>
+
+<record id="donation_tax_receipt_form" model="ir.ui.view">
+    <field name="name">donation.donation.tax.receipt.form</field>
+    <field name="model">donation.tax.receipt</field>
+    <field name="inherit_id" ref="donation_base.donation_tax_receipt_form"/>
+    <field name="arch"  type="xml">
+        <group name="main" position="after">
+            <group name="donations" string="Related Donations">
+                <field name="donation_ids" nolabel="1"/>
+            </group>
+        </group>
+    </field>
+</record>
+<!-->
+<menuitem id="donation_tax_title_menu" parent="donation.donation_top_menu"
+    sequence="20" name="Tax Receipts"/>
+
+<menuitem id="donation_tax_receipt_menu"
+    action="donation_base.donation_tax_receipt_action"
+    parent="donation_tax_title_menu"
+    sequence="20"/>
+
+<menuitem id="tax_receipt_annual_create_menu" sequence="45"
+    action="donation_base.tax_receipt_annual_create_action"
+    parent="donation_tax_title_menu"
+    groups="donation.group_donation_user"/>
+
+<menuitem id="donation_tax_receipt_print_menu" sequence="40"
+    action="donation_base.donation_tax_receipt_print_action"
+    parent="donation_tax_title_menu"
+    groups="donation.group_donation_user"/>
+-->
+
+</data>
+</odoo>

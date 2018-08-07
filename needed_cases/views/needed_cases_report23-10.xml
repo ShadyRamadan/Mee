@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+        <report 
+            string="بيانات البحث"
+            id="action_report_needed_cases"
+            model="needed.cases"
+            report_type="qweb-pdf"
+            name="needed_cases.report_neededcases"
+            file="needed_cases.report_neddedcases"
+         />
+         <report 
+            string="بيانات الإعتماد"
+            id="action_report_needed_cases_acc"
+            model="needed.cases"
+            report_type="qweb-pdf"
+            name="needed_cases.report_neededcases_acc"
+            file="needed_cases.report_neddedcases_acc"
+         />
+         <report 
+            string="بيانات البحث والإعتماد"
+            id="action_report_needed_cases_both"
+            model="needed.cases"
+            report_type="qweb-pdf"
+            name="needed_cases.report_neededcases_both"
+            file="needed_cases.report_neddedcases_both"
+         />
+    </data>
+</openerp>

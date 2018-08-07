@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+         <!-- Volunteers -->
+        <record id="view_volunteers_tree" model="ir.ui.view">
+            <field name="name">volunteers.tree</field>
+            <field name="model">volunteers</field>
+            <field name="arch" type="xml">
+                <tree string="Volunteers">
+                    <field name="name"/>
+                    <field name="national_number"/>
+                    <field name="gender" string="النوع"/>
+                    <field name="birthday" string="تاريخ الميلاد"/>
+                    <field name="age" string="السن"/>
+                    <field name="mobile_phone"/>
+                    <field name="email" required="True"/>
+                    <field name="role"/>
+                   <!--> <field name="country_id"/> -->
+                    <field name="gov_id"/>
+                    <field name="city_id"/>
+                  <!-->  <field name="village_id"/> -->
+                  <!-->  <field name="student"/>
+                    <field name="job"/> -->
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_volunteers_form" model="ir.ui.view">
+            <field name="name">volunteers.form</field>
+            <field name="model">volunteers</field>
+            <field name="arch" type="xml">
+                <form string="Volunteers">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="national_number"/>
+                            <field name="gender" string="النوع"/>
+                            <field name="birthday" string="تاريخ الميلاد"/>
+                            <field name="age" string="السن"/>
+                            <field name="mobile_phone"/>
+                            <field name="mobile_phone2"/>
+                            <field name="email"/>
+                            <field name="role"/>
+                        </group>
+                        <group>
+                            <field name="country_id"/>
+                            <field name="gov_id"/>
+                            <field name="city_id"/>
+                            <field name="village_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="student" widget="radio" options="{'horizontal': true}"/>
+                            <field name="job"/>
+                        </group>
+                        <group>
+                            <field name="faculty" attrs="{'invisible':['|',('student','not in',[1])]}"/>
+                            <field name="qualification" attrs="{'invisible':['|',('student','not in',[2])]}"/>
+                            <field name="qual_other" attrs="{'invisible':['|',('qualification','not in',[14])]}"/>
+                             <field name="faculty_other" attrs="{'invisible':['|',('faculty','not in',[14])]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="HR Settings" groups="__export__.res_groups_69">
+                            <group>
+                                <group string='Status'>
+                                     <field name="user_id" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </form>
+                <!--<div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>-->
+            </field>
+        </record>
+
+        <record id="action_volunteers" model="ir.actions.act_window">
+            <field name="name">Volunteers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">volunteers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_volunteers_tree"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        <record model="ir.ui.view" id="vo_kanban_view_volunteers">
+        <field name="name">volunteers.kanban</field>
+        <field name="model">volunteers</field>
+        <!--<field name="priority">10</field>-->
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <!--<field name="last_login"/>
+                <field name="message_is_follower"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+                <field name="message_needaction_counter"/>-->
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div> 
+                        <div class="oe_kanban_content">
+                                  <strong>
+                                <field name="name"/>
+                            </strong>
+                            <ul>
+                                <li t-if="record.national_number.raw_value"><field name="national_number"/></li>
+                                <li t-if="record.mobile_phone.raw_value"><field name="mobile_phone"/></li>
+                                <li t-if="record.role.raw_value"><field name="role"/></li>
+                                <li t-if="record.student.raw_value"><field name="student"/></li>
+                                <li t-if="record.gov_id.raw_value"><field name="gov_id"/></li>
+                                <li t-if="record.city_id.raw_value"><field name="city_id"/></li>
+                                <li t-if="record.village_id.raw_value"><field name="village_id"/></li>
+                            </ul>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+    <!--> <menuitem id="parent_menu_volunteers"
+            name="Volunteers"
+            />
+        <menuitem id="menu_volunteers"
+            name="Volunteers"
+            parent="parent_menu_volunteers"
+            />
+        <menuitem
+            id="menu_volunteers_act"
+            sequence="10"
+            parent="menu_volunteers"
+            action="action_volunteers"
+            />-->
+     </data>
+</openerp>

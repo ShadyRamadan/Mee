@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+        <record id="fund_stream_donation_action" model="ir.actions.act_window">
+            <field name="name">Source of Fund</field>
+            <field name="res_model">donation.line</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{'search_default_fundstream_id': active_id}</field>
+        </record>
+        
+        <record id="donation_fundstream_form" model="ir.ui.view">
+            <field name="name">donation.fundstream.form</field>
+            <field name="model">donation.fundstream</field>
+            <field name="arch" type="xml">
+                <form string="Fund Stream">
+                    <sheet>
+                        <div class="oe_button_box" name="button_fundstream">
+                            <button type="object" name="compute" string="Compute"
+                                    class="oe_highlight"/>
+                        </div>
+                        <group name="main">
+                            <group>
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="max_code" invisible="1"/>
+                                <field name="start_date"/>
+                                <field name="analytic_account_id" required="1"/>
+                                <field name="project_id"/>
+                                <field name="budget_id"/>
+                                <field name="responsible"/>
+                                <field name="nota"/>
+                            </group>
+                        </group>
+                        <group col='6' name="theme" string="Theme">
+                            <field name="is_education"/>
+                            <field name="is_health"/>
+                            <field name="is_livelihood"/>
+                            <field name="is_cash_assistant"/>
+                            <field name="is_basic_needs"/>
+                            <field name="is_youth_development"/>
+                            <field name="sub_theme" required="1"/>
+                        </group>
+                <notebook>
+                    <page string="Crowed Fund" name="lines">
+                        <field name="line_ids" nolabel="1" create="false" domain="[('amount','=',1000)]">
+                            <tree>
+                                <field name="product_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="partner_id" domain="[('is_donor', '=', True)]"/>
+                                <field name="recipt_number"/>
+                                <field name="quantity"/>
+                                <field name="unit_price"/>
+                                <field name="it_amount"/>
+                                <field name="amount" groups="donation.group_donation_user"/>
+                                <field name="company_id" readonly="1" invisible="1"/>
+                                <field name="fundstream_id" required="1"/>
+                                <field name="analytic_account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="analytic_account2" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}" />
+                                <field name="account_id" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="state"/>
+                                <field name="donation_place" required="1"/>
+                                <field name="donation_collector" domain="[('is_collector', '=', True)]"/>
+                                <field name="donation_method" invisible="0" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                                <field name="vmachine_id"/>
+                                <field name="in_kind" invisible="1"/>
+                                <field name="tags_id" widget="many2many_tags" readonly="0" invisible="1" options="{'limit': 10, 'no_create': true, 'no_create_edit': true}"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Source of Fund" name="lines">
+                        <field name="source_ids" nolabel="1">
+                            <tree create="false">
+                                <field name="name"/>
+                                <field name="code"/>
+                                <field name="organization"/>
+                                <field name="start_date"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            <group>
+                <field name="total_fund" string="Total Source of Fund"/>
+                <field name="cost_budget"/>
+                <field name="difference"/>
+                <field name="fund_active"/>
+            </group>
+        </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="donation_fundstream_tree" model="ir.ui.view">
+    <field name="name">donation.fundstream.tree</field>
+    <field name="model">donation.fundstream</field>
+    <field name="arch" type="xml">
+        <tree string="Fund Stream">
+            <field name="code"/>
+            <field name="name"/>
+            <field name="start_date"/>
+            <field name="project_id"/>
+            <field name="total_fund"/>
+            <field name="fund_active"/>
+            <field name="responsible"/>
+        </tree>
+    </field>
+</record>
+
+<record id="donation_fundstream_action" model="ir.actions.act_window">
+    <field name="name">Fundstream</field>
+    <field name="res_model">donation.fundstream</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="donation_fundstream_menu" action="donation_fundstream_action"
+    parent="donation_config_menu" sequence="31"/>
+
+</data>
+</odoo>

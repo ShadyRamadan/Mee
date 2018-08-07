@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="theme_code_project_form">
+            <field name="name">Project Form</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='options_active']" position="after">
+                    <group name="main">
+                        <group>
+                            <field name="code"/>
+                            <field name="max_code" invisible="1"/>
+                        </group>
+                    </group>
+                    <group col='6' name="theme" string="Theme">
+                        <field name="is_education" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_health" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_livelihood" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_cash_assistant" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_basic_needs" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_youth_development" attrs="{'invisible':['|','|',('is_direct_fundraising','=',True),('is_reserve','=',True),('is_naf','=',True)]}"/>
+                            <field name="is_direct_fundraising" attrs="{'invisible':['|','|','|','|','|','|','|',('is_reserve','=',True),('is_naf','=',True),('is_education','=',True),('is_health','=',True),('is_livelihood','=',True),('is_cash_assistant','=',True),('is_basic_needs','=',True),('is_youth_development','=',True)]}"/>
+                            <field name="is_reserve" attrs="{'invisible':['|','|','|','|','|','|','|',('is_direct_fundraising','=',True),('is_naf','=',True),('is_education','=',True),('is_health','=',True),('is_livelihood','=',True),('is_cash_assistant','=',True),('is_basic_needs','=',True),('is_youth_development','=',True)]}"/>
+                            <field name="is_naf"  attrs="{'invisible':['|','|','|','|','|','|','|',('is_reserve','=',True),('is_direct_fundraising','=',True),('is_education','=',True),('is_health','=',True),('is_livelihood','=',True),('is_cash_assistant','=',True),('is_basic_needs','=',True),('is_youth_development','=',True)]}"/>
+                        <field name="sub_theme" required="1"/>
+                    </group> 
+                </xpath>
+                <xpath expr="//page[@name='settings']" position="after">
+                    <page string="Fundstream" name="fundstream">
+                        <field name="fundstream">
+                            <tree>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="start_date"/>
+                                <field name="project_id"/>
+                                <field name="total_fund"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

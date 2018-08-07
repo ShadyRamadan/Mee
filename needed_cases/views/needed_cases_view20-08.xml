@@ -1,0 +1,1275 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+         <!-- needed cases -->
+        <record id="view_needed_cases_tree" model="ir.ui.view">
+            <field name="name">needed.cases.tree</field>
+            <field name="model">needed.cases</field>
+            <field name="arch" type="xml">
+                <tree string="Needed Cases">
+                    <field name="name" string="اسم المستفيد"/>
+                    <field name="national_number" string="الرقم القومي"/>
+                    <!--<field name="number_family" string="عدد اﻷسرة"/>-->
+                    <field name="country_id" string="الدولة"/>
+                    <field name="gov_id" string="المحافظة"/>
+                    <field name="city_id" string=" المركز / المدينة"/>
+                    <field name="village_id" string="القرية/المنطقة"/>
+                    <field name="age" string="السن"/>
+                    <field name="gender" string="النوع"/>
+                    <field name="accepted2" string="حالة البحث"/>
+                    <field name="state" string="المرحلة"/>
+                    <field name="authorized_opinion" string="الاعتماد"/>
+		            <field name="drugs_status" string="المخدرات"/>
+		            <field name="execution_done" string="التنفيذ"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_needed_cases_economy_tree" model="ir.ui.view">
+            <field name="name">needed.cases.economyreports.tree</field>
+            <field name="model">needed.cases.economyreports</field>
+            <field name="arch" type="xml">
+                <tree string="Needed Cases Economy Reports">
+                    <field name="report_number"/>
+                    <field name="report_date"/>
+                    <field name="project_income_weekly"/>
+                    <field name="project_expenses_weekly"/>
+                    <field name="project_profit"/>
+                    <field name="home_expenses_weekly"/>
+                    <field name="project_saving"/>
+                    <field name="project_state"/>
+                    <field name="safety_factor"/>
+                    <field name="trosikl_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_needed_cases_form" model="ir.ui.view">
+            <field name="name">needed.cases.form</field>
+            <field name="model">needed.cases</field>
+            <field name="arch" type="xml">
+                <form string="بيانات المستفيد">
+                    <header>
+                        <button name="button_research"
+                            states="accreditation,papers,drugs,execution,follow"
+                            string="Reset"
+                            type="object"/>
+                        <button name="button_to_accreditation" states="research"
+                            string="اعتماد" type="object"
+                            class="oe_highlight"/>
+                            <button name="button_to_drugs" 
+                            states="accreditation"
+                            string="المخدرات" type="object"
+                            class="oe_highlight"/>
+                        <button name="button_to_papers" states="drugs"
+                            string="اﻷوراق" type="object"
+                            class="oe_highlight"/>
+                        <button name="button_execution"
+                            states="papers"
+                            string="التنفيذ"
+                            type="object"
+                            class="oe_highlight"/>
+                        <button name="button_follow"
+                            states="execution"
+                            string="المتابعة الاقتصادية"
+                            type="object"
+                            class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="research,accreditation,drugs,papers,execution,follow"
+                               statusbar_colors='{"accreditation":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <!--<div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" 
+                                    name="attachment_tree_view"  
+                                    type="object" 
+                                    icon="fa-files-o">
+                                <field string="Documents" name="doc_count" widget="statinfo"/>
+                            </button>
+                        </div> -->
+                        <field name="image" widget='image' filename="filename87" class="oe_avatar" options='{"preview_image":"image"}'/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="اسم المستفيد"/>
+                            <h1>
+                                <!--<field name="code" placeholder="كود المستفيد" />-->
+                                <field name="name" string="اسم المستفيد"/>
+                                
+                            </h1>
+                        </div>
+                        <!--<field name="filename87"/>
+                        <field name="show_images"/>
+						<field name="data_drugs"/>
+						<field name="data_search"/>-->
+                        <group>
+                            <group string="بيانات الباحث">
+                                <field name="volunteer_id" required="1" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="volunteer_phone" readonly="1"/>
+                                <field name="volunteer_phone2" readonly="1"/>
+                                <!--<field name="volunteer_gender"/>-->
+                            </group>
+                        </group>
+                        <group>
+                            <group string='البيانات العامة'>
+                                <!--<field name="count_code" string="كود المستفيد"/>-->
+                                <field name="national_number" string="الرقم القومي" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="selfid" invisible="1"/>
+                            <!--<field name="number1" invisible="0"/>
+                            <field name="number2" invisible="0"/>
+                            <field name="number3" invisible="0"/>
+                            <field name="number4" invisible="0"/>
+                            <field name="number5" invisible="0"/>
+                            <field name="number6" invisible="0"/>-->
+                                <field name="gender" string="النوع"/>
+                                <field name="age" string="السن"/>
+                                <field name="mobile_phone" string="الموبيل" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="tel_phone" string="التليفون اﻷرضي" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="accepted2" string="حالة البحث" attrs="{'invisible':[('accepted_type','in',[2])]}"/>
+                                <field name="accepted4" string= "البحث" invisible="1"/>
+				                <field name="accepted3" attrs="{'invisible':[('accepted_type','not in',[2])]}" string="حاله البحث"/>
+				                <field name="accepted_type" string="نوع موافقة البحث" groups="__export__.res_groups_69" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+				                <field name="accepted_reason" attrs="{'invisible':[('accepted_type','not in',[2])],'readonly':[('state','in',['drugs','papers','execution','follow'])]}" string="سبب الاستثناء" groups="__export__.res_groups_69"/>
+                            </group>
+                            <group string='العنوان'>
+                                <field name="gov_id" string=" المحافظة" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="city_id" string="المركز / المدينة" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="village_id" string="القرية / المنطقة" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="street" string="اسم الشارع" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                                <field name="address" string="العنوان بالتفصيل كما بالبطاقة" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+				                <field name="number_family" string="عدد أفراد اﻷسرة متضمنا المستفيد" attrs="{'readonly':[('state','in',['drugs','papers','execution','follow'])]}"/>
+                            </group>
+                        </group>
+                        <group states="accreditation,research">
+                            <group string='التعليم والعمل'>
+                                <field name="education" widget="radio" options="{'horizontal': true}" string="التعليم"/>
+                                <field name="job" widget="radio" options="{'horizontal': true}" string="الوظيفة"/>
+			                	<field name="job_type" attrs="{'invisible':[('job','not in',[2])]}" string="نوع العمل"/>
+                                <field name="project_type" widget="radio" options="{'horizontal': true}" string="نوع المشروع"/>
+                                <field name="project_other" attrs="{'invisible':['|',('project_type','not in',[2])]}" string="اسم المشروع"/>
+                                <field name="have_project" string="لديك مشروع"/>
+                                <field name="project_association" attrs="{'invisible':['|',('have_project','not in',[3])]}" string="اسم الجهة المانحة"/>
+                                <!--<field name="project_income"/>-->
+                                <field name="proj_income_type" attrs="{'invisible':['|',('have_project','in',[1])]}"/>
+                                <field name="proj_income_year" attrs="{'invisible':['|',('have_project','in',[1])]}"/>
+                                <field name="proj_first_money" attrs="{'invisible':['|',('have_project','in',[1])]}"/>
+                                <field name="proj_current_money" invisible="1"/>
+                                <field name="proj_income_month" attrs="{'invisible':['|',('have_project','in',[1])]}" widget="char"/>
+                            </group>
+                            <group string='الحالة الاجتماعية'>
+                                <field name="marital_status" widget="radio" options="{'horizontal': true}" string="الحالة الاجتماعية"/>
+                                <field name="depends" widget="radio" options="{'horizontal': true}" string="يعول / لا يعول"/>
+                                <field name="number_depends" attrs="{'invisible':['|',('depends','not in',[1])]}" string="عدد من يعولهم"/>
+                            </group>
+                        </group>
+                        <group states="accreditation,research">
+                            <group string='أمراض لا تهدد الحياة'>
+                                <field name="is_disease" string=""/>
+                                <field name="is_back" attrs="{'invisible':['|',('is_disease','=',True)]}" string=""/>
+                                <field name="is_chronic_disease" attrs="{'invisible':['|',('is_disease','=',True)]}" string=""/>
+                                <field name="other_disease" attrs="{'invisible':['|',('is_disease','=',True)]}" string=""/>			
+                            </group>
+                            <group string='أمراض مزمنة تهدد الحياة'>
+                                <field name="is_not_chronic_disease" string=""/>
+                                <field name="is_virus_C" attrs="{'invisible':['|',('is_not_chronic_disease','=',True)]}" string=""/>
+                                <field name="is_kidney_fail" attrs="{'invisible':['|',('is_not_chronic_disease','=',True)]}" string=""/>
+                                <field name="is_cancer" attrs="{'invisible':['|',('is_not_chronic_disease','=',True)]}" string=""/>
+				                <field name="other_chronic_disease" attrs="{'invisible':['|',('is_not_chronic_disease','=',True)]}" string=""/>
+                            </group>
+                        </group>
+                        <group string='الإعاقات' col='8' states="accreditation,research">
+                        <!--<div>-->
+                            <field name="is_right" string=""/>
+                            <field name="is_blind" attrs="{'invisible':['|',('is_right','=',True)]}" string=""/>
+                            <field name="is_amputation" attrs="{'invisible':['|',('is_right','=',True)]}" string=""/>
+                            <field name="is_paralysis" attrs="{'invisible':['|',('is_right','=',True)]}"/>
+                        <!--</div> style="width: 25%" -->
+                        <!--<field name="is_right"/>
+                        <field name="is_blind" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        <field name="is_amputation" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        <field name="is_paralysis" attrs="{'readonly':['|',('is_right','=',True)]}"/>-->
+                            <field name="is_disability" attrs="{'invisible':['|',('is_right','=',True)]}"/>
+                            <field name="is_problem" attrs="{'invisible':['|',('is_right','=',True)]}"/>
+                            <field name="is_weakness" attrs="{'invisible':['|',('is_right','=',True)]}"/>
+			                <field name="other_disability" attrs="{'invisible':['|',('is_right','=',True)]}"/>
+                        </group>
+                        <group string="المصروفات" col='6' states="accreditation,research">
+                            <field name="department_rent" widget="char"/>
+                            <field name="associations_expenses" widget="char"/>
+                            <field name="device_payments" widget="char"/>
+                            <field name="water_gas" widget="char"/>
+                            <field name="studying_child" widget="char"/>
+                            <field name="home_expenses" widget="char"/>
+                            <field name="monthly_dept" widget="char"/>
+			                <field name="medicine_expenses" widget="char"/>
+	                        <field name="smoking_expenses" widget="char"/>
+                            <field name="other_expenses" widget="char"/>
+                            <field name="total_expenses"/>
+                        </group>
+                        <group string="الدخل" states="accreditation,research">
+                            <group string="دخل شهري لرب الاسرة">
+                                <field name="person_job" widget="char"/>
+                                <field name="person_craft" widget="char"/>
+                            </group>
+                            <group string="دخل شهري لباقي الأسرة">
+                                <field name="family_job" widget="char"/>
+                                <field name="family_craft" widget="char"/>
+                                <field name="family_salary" widget="char"/>
+                            </group>  
+                        </group>  
+                        <group states="accreditation,research" col="6">
+                            <field name="associations_salary" widget="char"/>
+                            <field name="relatives_salary" widget="char"/>
+                            <field name="department_income" widget="char"/>
+                            <field name="other_income" widget="char"/>
+                            <field name="total_income"/>
+			            </group>
+                        <group states="accreditation,research">
+                            <group string="الديون">
+                                <field name="depts" widget="radio" options="{'horizontal': true}"/>
+                                <field name="total_depts" widget="char" attrs="{'invisible':['|',('depts','not in',[2,3])]}"/>
+				                <field name="reason_depts" attrs="{'invisible':['|',('depts','not in',[2,3])]}"/>
+			                    <field name="relation_depts" attrs="{'invisible':['|',('depts','not in',[2,3])]}"/>
+                            </group>
+                            <group string="Live with Family" invisible="1">
+                                <field name="live_family" widget="radio" options="{'horizontal': true}" invisible="1"/>
+                            </group>
+                        </group>
+                        <group string="اﻷملاك والشراكات" col='8' states="accreditation,research">
+                            <field name="is_property"/>
+                            <field name="is_earth" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+			                <field name="total_earth" widget="char" attrs="{'invisible':['|',('is_earth','=',False)]}"/>
+                            <field name="is_house" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="is_motorbike" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="is_caro" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="is_shop" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="is_farsha" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="is_cow" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+			                <field name="total_cow" widget="char" attrs="{'invisible':['|',('is_cow','=',False)]}"/>
+                            <field name="is_sheep" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                            <field name="number_sheep" widget="char" attrs="{'invisible':['|',('is_sheep','=',False)]}"/>
+                            <field name="other_property" attrs="{'invisible':['|',('is_property','=',True)]}"/>
+                        </group>
+			            <group states="accreditation,research">
+			                <field name="father_property"/>
+			            </group>
+						
+                        <group string="المنزل" states="accreditation,research">
+                            <group>
+                                <field name="house_ownership" widget="radio" options="{'horizontal': true}"/>
+                                <field name="bathroom" widget="radio" options="{'horizontal': true}"/>
+                                <field name="walls" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                            <group >
+                                <field name="house_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="number_room" widget="char"/>
+                                <field name="roof" widget="radio" options="{'horizontal': true}"/>
+                            </group> 
+                        <!--<group string="يوجد حمام؟">
+                        </group>
+                        <group string="Number of Rooms">
+                        </group>
+                        <group string="الحوائط">
+                        </group>
+                        <group string="السقف">
+                        </group>--> 
+                        </group>
+                        <group string="الأجهزة الموجودة بالمنزل" col='8' states="accreditation,research">
+                            <field name="is_devices"/>
+                            <field name="is_television" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+                            <field name="is_fridge" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+                            <field name="is_cooker" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+                            <field name="is_fans" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+                            <field name="is_washer" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+			                <field name="other_device" attrs="{'invisible':['|',('is_devices','=',True)]}"/>
+                        </group>
+                       <!--> <group attrs="{'invisible':[('state','not in','research','accreditation')]}">
+                        </group> -->
+                        <group string="ملاحظات" states="accreditation,research">
+                            <field name="notes"/>
+                            <field name="criteria" invisible="1"/>
+                        </group>
+                    <!--<group>
+                         <field name="volunteering_id" string="Responsible Volunteers"/>
+                    </group>-->
+                    <!--<label for="volunteer_ids"/>
+                    <field name="volunteer_ids">
+                        <tree editable="bottom">
+                            <field name="volunteer_id" string="Responsible Volunteers"/>
+                            <field name="volunteer_mobile_phone" options='{"no_open": True}'/>
+                            <field name="Start Date"/>
+                            <field name="code"/>
+                        </tree>
+                    </field>-->
+                    <group>
+                        
+                    </group>
+                        <notebook>
+                            <!--> -->
+                            <page string="الاعتماد"  attrs="{'invisible':[('state','not in','accreditation')]}">
+				                <header>
+				                    <button name="button_gov_search"
+					                        attrs="{'invisible':[('state_accreditation','in',['gov_search'])]}"
+						                    string="Reset"
+						                    groups="__export__.res_groups_74,__export__.res_groups_69"
+						                    type="object"/>
+				                   <!--> <button name="button_to_gov_accreditation"
+					                        attrs="{'invisible':[('state_accreditation','in',['gov_accreditation','responsible_accreditation','project_accreditation'])]}"
+						                    string="اعتماد المحافظة"
+						                    groups="__export__.res_groups_72"
+						                    type="object"
+						                    class="oe_highlight"/> -->
+			                        <button name="button_to_responsible_accreditation"
+					                        attrs="{'invisible':[('state_accreditation','in',['responsible_accreditation'])]}"
+						                    string="اعتماد مسئول الاعتماد"
+						                    groups="__export__.res_groups_74,__export__.res_groups_69"
+						                    type="object"
+						                    class="oe_highlight"/>
+				                    <!--<button name="button_to_project_accreditation"
+					                        attrs="{'invisible':[('state_accreditation','in',['gov_search','gov_accreditation','project_accreditation'])]}"
+						                    string="اعتماد مدير المشروع"
+						                    groups="__export__.res_groups_69"
+						                    type="object"
+						                    class="oe_highlight"/> -->
+		         		            <field name="state_accreditation" widget="statusbar" nolabel="1"
+			                               statusbar_visible="gov_search,responsible_accreditation,rejected"
+					                       statusbar_colors='{"responsible_accreditation":"blue"}'/>
+				                </header>
+				                <group>
+                                    <group string="بيانات المعتمد">
+                                        <field name="volunteer_id_auth" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                        <field name="volunteer_phone_auth" readonly="1"/>
+                                        <field name="volunteer_phone2_auth" readonly="1"/>
+                                <!--<field name="volunteer_gender"/>-->
+                                    </group>
+                                </group>
+                                <group string="بيانات الإعتماد">
+                                    <field name="experiences_project" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="exp_months" attrs="{'required':[('state','in',['accreditation']),('experiences_project','=',[1])],'invisible':['|',('experiences_project','not in',[1])]}" widget="char"/>
+                                    <field name="story" attrs="{'required':[('state','in',['accreditation'])]}"/>
+				                    <field name="provide_money" attrs="{'required':[('state','in',['accreditation'])]}"/>
+		       	                    <field name="pay_depts" attrs="{'required':[('state','in',['accreditation'])]}"/>
+				                </group>
+				                <group>
+			                        <field name="driving" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+				                    <field name="know_project"  attrs="{'required':[('state','in',['accreditation'])]}"/>
+				                    <field name="tight_life" attrs="{'required':[('state','in',['accreditation'])]}"/>
+				                    <field name="pay_money" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+			                    </group>
+                                <group>
+                                    <field name="drugs" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="smoking" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="previous_issues" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+         			            </group>
+                                <group>
+                                    <field name="previous_projects" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="what_project" attrs="{'required':[('state','in',['accreditation']),('previous_projects','=',[1])],'invisible':[('previous_projects','not in',[1])]}"/>
+                                    <field name="trosikle" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="experience_work" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <!--<field name="experience_work" widget="radio" options="{'horizontal': true}"/>-->
+                                    <field name="profession_trosikle" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="static_money" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="authorized_opinion" widget="radio" options="{'horizontal': true}" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                    <field name="authorized_reason" attrs="{'required':[('state','in',['accreditation'])]}"/>
+                                </group>
+                            </page>
+			                <page string="المخدرات" attrs="{'invisible':[('state','not in','drugs')]}">
+				                <group>
+				                    <group string="تحليل المخدرات">
+	          		                   <field name="drugs_status" attrs="{'required':[('state','in',['drugs'])]}"/>
+				                       <field name="drugs_case" filename="filename16" widget='image' attrs="{'required':[('state','in',['drugs'])]}"/>
+				                       <field name="filename16" readonly="1" invisible="1"/>
+					                   <field name="drugs_notes" attrs="{'invisible':['|',('drugs_status','not in',[1])]}"/>
+				                    </group>
+				                    <group string=" إعتماد تحليل المخدرات" nolabel = "1" attrs="{'invisible':[('agree_drugspaper','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_drugspaper" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_drugspaper','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_drugspaper" nolabel = "1" attrs="{'invisible':[('agree_drugspaper','not in',[2])]}"/>
+                                    </group>
+				                </group>
+			                </page>
+                            <page string="اﻷوراق" attrs="{'invisible':[('state','not in','papers')]}">
+                            <header>
+                                    <button name="button_paper_agree"
+                                            attrs="{'invisible':[('state_paper','in',['paper_agree'])]}"
+                                            string="Reset"
+                                            groups="__export__.res_groups_75,__export__.res_groups_69"
+                                            type="object"/>
+                                    <button name="button_to_responsible_paper"
+                                            attrs="{'invisible':[('state_paper','in',['responsible_paper','project_paper'])]}"
+                                            groups="__export__.res_groups_75"
+                                            string="IT اعتماد مسئول"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                    <button name="button_to_project_paper"
+                                            attrs="{'invisible':[('state_paper','in',['project_paper','paper_agree','rejected'])]}"
+                                            groups="__export__.res_groups_69"
+                                            string="اعتماد مدير المشروع"
+                                            type="object"
+                                            class="oe_highlight"/>
+                                    <field name="state_paper" widget="statusbar" nolabel="1"
+                                           statusbar_visible="paper_agree,responsible_paper,project_paper,rejected"
+                                           statusbar_colors='{"project_paper":"blue"}'/>
+                                </header>
+	         		            <group string="المستفيد">
+	         		                <field name="is_paper" invisible="1"/>
+				                    <group string="بطاقة الرقم القومي">
+				                       <field name="filename" readonly="1" invisible="0"/>
+					                   <field name="national_paper" filename="filename" widget='image'/>
+					                </group>
+					                 <group string=" إعتماد الرقم القومي" nolabel = "1" attrs="{'invisible':[('agree_nationalpaper','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_nationalpaper" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_nationalpaper','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_nationalpaper" nolabel = "1" attrs="{'invisible':[('agree_nationalpaper','not in',[2])]}"/>
+                                    </group>
+					                <group>
+					                   <field name="filename2" readonly="1" invisible="0"/>
+					                   <field name="national_paper2" filename="filename2" widget='image'/>
+					                   <field name="national_notes"/>
+				                    </group>
+                                    <group>   
+                                       <field name="agree_nationalpaper2" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_nationalpaper','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_nationalpaper2" nolabel = "1" attrs="{'invisible':[('agree_nationalpaper2','not in',[2])]}"/>
+                                    </group>
+				                </group>
+				                <group>
+                                    <group string="بحث الشئون الاجتماعية">
+                                        <field name="filename6" readonly="1" invisible="0"/>
+                                        <field name="social_status" filename="filename6" widget='image'/>
+                                    </group>
+                                    <group string=" إعتماد  الشئون الاجتماعية " attrs="{'invisible':[('agree_socialstatus','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_socialstatus" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_socialstatus','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_socialstatus" nolabel = "1" attrs="{'invisible':[('agree_socialstatus','not in',[2])]}"/>
+                                    </group>
+                                    <group>    
+                                        <field name="filename7" readonly="1" invisible="0"/>
+                                        <field name="social_status2" filename="filename7" widget='image'/>
+                                        <field name="social_notes"/>
+                                    </group>
+                                    <group>   
+                                       <field name="agree_socialstatus2" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_socialstatus2','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_socialstatus2" nolabel = "1" attrs="{'invisible':[('agree_socialstatus2','not in',[2])]}"/>
+                                    </group>
+                                </group>
+				                <group>
+				                    <group string="صحيفة الحالة الجنائية">
+				                       <field name="filename3" readonly="1" invisible="0"/>
+					                   <field name="criminal_case" filename="filename3" widget='image'/>
+					                   <field name="criminal_notes"/>
+					                   <field name="criminal_status"/>
+				                    </group>
+				                    <group string=" إعتماد الحالة الجنائية " attrs="{'invisible':[('agree_criminalcase','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_criminalcase" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_criminalcase','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_criminalcase" nolabel = "1" attrs="{'invisible':[('agree_criminalcase','not in',[2])]}"/>
+                                    </group>
+				                </group>
+				                <group string="البرنت التأميني">
+				                    <group>
+				                        <field name="filename10" readonly="1" invisible="0"/>
+				                        <field name="insurance_husband" filename="filename10" widget='image'/>
+                                        <field name="insurance_status"/>
+				                    </group>
+				                    <group string=" إعتماد البرنت التأميني " attrs="{'invisible':[('agree_insuranchusband','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_insuranchusband" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_insuranchusband','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_insurancehusband" nolabel = "1" attrs="{'invisible':[('agree_insuranchusband','not in',[2])]}"/>
+                                    </group>
+				                </group>
+				                 <group>
+                                    <group string="المؤهل الدراسي">
+                                       <field name="filename4" readonly="1" invisible="0"/>
+                                       <field name="eductional_qualification" filename="filename4" widget='image'/>
+                                       <field name="eductional_notes"/>
+                                       <field name="qualification"/>
+                                    </group>
+                                     <group string="إعتماد المؤهل الدراسي" attrs="{'invisible':[('agree_eductional','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_eductional" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_eductional','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_eductional" nolabel = "1" attrs="{'invisible':[('agree_eductional','not in',[2])]}"/>
+                                    </group>
+                                </group>
+				                <group string="الحيازة الزراعية">
+                                    <group string="المستفيد">
+                                        <field name="filename8" readonly="1" invisible="0"/>
+                                        <field name="holding_husband" filename="filename8" widget='image'/>
+                                        <field name="holding_status"/>
+                                    </group>
+                                    <group string=" إعتماد الحيازة الزراعية " attrs="{'invisible':[('agree_holdinghusband','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_holdinghusband" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_holdinghusband','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_holdinghusband" nolabel = "1" attrs="{'invisible':[('agree_holdinghusband','not in',[2])]}"/>
+                                    </group>
+                                </group>
+                                 <group>
+                                    <group string="والد المستفيد">
+                                        <field name="filename24" readonly="1" invisible="0"/>
+                                        <field name="holding_father" filename="filename24" widget='image'/>
+                                        <field name="holding_type"/>
+                                        <field name="holding_status3" attrs="{'invisible':['|',('holding_type','not in',[1])]}"/>
+                                    </group>
+                                    <group string=" إعتماد الحيازة  للوالد" attrs="{'invisible':[('agree_holdingfather','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_holdingfather" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_holdingfather','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_holdingfather" nolabel = "1" attrs="{'invisible':[('agree_holdingfather','not in',[2])]}"/>
+                                    </group>
+                                </group>
+                                 <group>
+                                    <group string="زوجة المستفيد">
+                                        <field name="filename9" readonly="1" invisible="0"/>
+                                        <field name="holding_wife" filename="filename9" widget='image'/>
+                                        <field name="holding_type2"/>
+                                        <field name="holding_status2" attrs="{'invisible':['|',('holding_type2','not in',[1])]}"/>
+                                        <field name="insurance_wife" filename="filename11" invisible="1"/>
+                                        <field name="filename11" readonly="1" invisible="1"/>
+                                        <field name="insurance_status2" invisible="1"/>
+                                    </group>
+                                    <group string=" إعتماد الحيازة للزوجة " attrs="{'invisible':[('agree_holdingwife','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_holdingwife" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_holdingwife','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_holdingwife" nolabel = "1" attrs="{'invisible':[('agree_holdingwife','not in',[2])]}"/>
+                                    </group>
+                                </group>
+				                <group string="أوراق اﻷسرة">
+				                    <group>
+				                    <button name="button_depends"
+                                        string="أوراق من يعولهم"
+                                        class="oe_highlight"
+                                        attrs="{'invisible':['|',('depends','not in',[1])]}"
+                                        type="object"/>
+				                    </group>
+				                    <group>
+				                    </group>
+				                </group>
+				                <group>
+				                    <group>
+         				                <field name="familypaper_ids" nolabel="1">
+					                       <tree create="false" delete="false">
+											    <field name="member_id"/>
+												<field name="file_type"/>
+												<field name="name2"/>
+												<field name="national_number"/>
+												<field name="relation"/>
+												<field name="medical_case"/>
+												<field name="education_case"/>
+												<field name="job_case"/>
+												<field name="face1"/>
+												<field name="face2"/>
+											</tree>
+											<form>
+											    <group>
+												    <field name="member_id" readonly="1"/>
+												    <field name="file_type"/>
+												    <field name="name2"/>
+												    <field name="national_number"/>
+												    <field name="relation"/>
+												    <field name="medical_case"/>
+												    <field name="education_case"/>
+												    <field name="job_case"/>
+												    <field name="filename22" readonly="1" invisible="0"/>
+												    <field name="face1" filename="filename22" widget='image'/>
+												    <field name="filename23" readonly="1" invisible="0"/>
+												    <field name="face2" filename="filename23" widget='image' attrs="{'invisible':[('file_type','not in',[1])]}"/>
+												</group>
+											</form>
+										</field>
+									</group>
+								</group>
+								
+								<group string="أوراق أخرى">
+								    <group string="الكهرباء">
+									    <field name="filename12" readonly="1" invisible="0"/>
+									    <field name="electricty_voucher" filename="filename12" widget='image'/>
+										<field name="electricty_notes"/>
+									</group>
+									<group string="المياة">
+									    <field name="filename13" readonly="1" invisible="0"/>
+									    <field name="water_voucher" filename="filename13" widget='image'/>
+										<field name="water_notes"/>
+									</group>
+									<group string="التليفون">
+									    <field name="filename14" readonly="1" invisible="0"/>
+									    <field name="telephone_voucher" filename="filename14" widget='image'/>
+										<field name="telephone_notes"/>
+									</group>
+									<group string="الغاز">
+                                        <field name="filename25" readonly="1" invisible="0"/>
+                                        <field name="gas_voucher" filename="filename25" widget='image'/>
+                                        <field name="gas_notes"/>
+                                    </group>
+									<group string="المنزل">
+									    <field name="filename15" readonly="1" invisible="0"/>
+									    <field name="house_voucher" filename="filename15" widget='image'/>
+										<field name="house_notes"/>
+									</group>
+								</group>
+                                <group>
+                                    <group>
+                                        <field name="filename100" readonly="1" invisible="1"/>
+                                        <field name="national1" filename="filename100" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+							<page string="التنفيذ والتسليم" attrs="{'invisible':[('state','not in','execution')]}">
+							    <group string="التنفيذ">
+								    <group>
+									    <field name="date_execution" attrs="{'required':[('state','in',['execution'])]}"/>
+										<field name="execution_done" widget="radio" options="{'horizontal':true}" attrs="{'required':[('state','in',['execution'])]}"/>
+										<field name="code" placeholder="كود المستفيد" />
+									</group>
+								</group>
+								<group string= "أوراق تسليم التروسيكل">
+								    <group string="عقد الاتفاق">
+								        <field name="filename17" readonly="1" invisible="0"/>
+								        <field name="contract_agreement" filename="filename17" widget='image'/>
+								        <field name="chassih_number" attrs="{'required':[('state','in',['execution'])]}"/>
+                                        <field name="motor_number" attrs="{'required':[('state','in',['execution'])]}"/>
+								    </group>
+								    <!--<group string=" إعتماد العقد" attrs="{'invisible':[('agree_contract1','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_contract1" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_contract1','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_contract1" nolabel = "1" attrs="{'invisible':[('agree_contract1','not in',[2]),('is_paper','=',False)]}"/>
+                                    </group>-->
+								    <group>
+                                        <!--<field name="filename18" readonly="1" invisible="0"/>
+                                        <field name="contract_agreement2" filename="filename18" widget='image'/>-->
+                                        
+								    </group>
+                                    <!--<group>   
+                                       <field name="agree_contract2" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_contract2','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_contract2" nolabel = "1" attrs="{'invisible':[('agree_contract2','not in',[2]),('is_paper','=',False)]}"/>
+                                    </group>-->
+								</group>
+								<group>
+								    <group string="ايصال الاستلام" >
+								        <field name="filename19" readonly="1" invisible="0"/>
+								        <field name="recipt" filename="filename19" widget='image'/>
+								    </group>
+								    <!--<group string=" إعتماد ايصال الاستلام" attrs="{'invisible':[('agree_recipt','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_recipt" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_recipt','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_recipt" nolabel = "1" attrs="{'invisible':[('agree_recipt','not in',[2]),('is_paper','=',False)]}"/>
+                                    </group>-->
+								</group>
+								<group>
+                                    <group string="إقرار">
+                                        <field name="filename5" readonly="1" invisible="0"/>
+                                        <field name="decleration" filename="filename5" widget='image'/>
+                                        <field name="decleration_notes"/>
+                                    </group>
+                                    <!--<group string=" إعتماد الاقرار" attrs="{'invisible':[('agree_decleration','not in',[2]),('is_paper','=',False)]}">
+                                       <field name="agree_decleration" nolabel = "1" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('agree_decleration','not in',[2]),('is_paper','=',False)]}"/>
+                                       <field name="reason_decleration" nolabel = "1" attrs="{'invisible':[('agree_decleration','not in',[2]),('is_paper','=',False)]}"/>
+                                    </group>-->
+                                </group>
+                                <group>
+                                    <group string="أوراق بعد التسليم">
+                                        <field name="filename20" readonly="1" invisible="0"/>
+                                        <field name="procrastination" filename="filename20" widget='image'/>
+                                        <field name="filename21" readonly="1" invisible="0"/>
+                                        <field name="authentication" filename="filename21" widget='image'/>
+                                        <field name="filename26" readonly="1" invisible="0"/>
+                                        <field name="origin_certification" filename="filename26" widget='image'/>
+                                        <field name="filename27" readonly="1" invisible="0"/>
+                                        <field name="shassih_detection" filename="filename27" widget='image'/>
+                                        <field name="filename28" readonly="1" invisible="0"/>
+                                        <field name="trosikl_invoice" filename="filename28" widget='image'/>
+                                    </group>
+                                </group>
+							</page>
+                            <!--<page string="كل ملفات الأسرة" invisible="1">
+                                <group>
+                                    <group>
+                                        <field name="filename_all" readonly="0" invisible="0" nolabel = "1"/>
+                                        <field name="filename2_all" readonly="0" invisible="0" nolabel = "1"/>
+                                    </group>
+                                    <group>
+                                        <field name="national_paper_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                        <field name="national_paper2_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                    </group>
+                                </group>
+                                <field name="filename3_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="criminal_case_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename4_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="eductional_qualification_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename6_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="social_status_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename7_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="social_status2_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename8_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="holding_husband_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename24_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="holding_father_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename9_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="holding_wife_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename10_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="insurance_husband_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename12_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="electricty_voucher_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename13_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="water_voucher_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename25_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="gas_voucher_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename14_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="telephone_voucher_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename15_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="house_voucher_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename16_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="drugs_case_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename17_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="contract_agreement_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename18_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="contract_agreement2_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename19_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="recipt_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename5_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="decleration_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename20_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="procrastination_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename21_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="authentication_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename26_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="origin_certification_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <field name="filename27_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="shassih_detection_all" filename="filename2_all" nolabel = "1" widget='image' class="oe_avatar"/>
+                                <field name="filename28_all" readonly="0" invisible="0" nolabel = "1"/>
+                                <field name="trosikl_invoice_all" filename="filename_all" nolabel = "1" widget='image' class="oe_avatar"/>   
+                                <group cols="6">  
+                            </page> -->
+                            <page string="المتابعة الإقتصادية" attrs="{'invisible':[('state','not in','follow')]}">
+                                <group>
+                                    <header> 
+                                                <field name="state_economy" widget="statusbar" nolabel="1"
+                                                       statusbar_visible="1,2,3,4,5"
+                                                       statusbar_colors='{"2":"blue"}'/>
+                                    </header>
+                                </group>     
+                                <group>
+                                        <field name="economyreports_ids" nolabel="1">
+                                            <tree create="false"  delete="false">
+                                                <field name="report_number"/>
+                                                <field name="report_date"/>
+                                                <field name="project_income_weekly"/>
+                                                <field name="project_expenses_weekly"/>
+                                                <field name="project_profit"/>
+                                                <field name="home_expenses_weekly"/>
+                                                <field name="project_saving"/>
+                                                <field name="project_state"/>
+                                                <field name="safety_factor"/>
+                                                <field name="trosikl_type"/>
+                                            </tree>
+                                            <form>
+                                              <!-->  <header> 
+                                                    <button name="button_first_visit"
+                                                        attrs="{'invisible':[('report_number','!=',1)]}"
+                                                        string="التقرير اﻷول"
+                                                        type="object"
+                                                        class="oe_highlight"/>
+                                                    <button name="button_second_visit"
+                                                        attrs="{'invisible':[('report_number','!=',2)]}"
+                                                        string="التقرير الثاني"
+                                                        type="object"
+                                                        class="oe_highlight"/>
+                                                    <button name="button_third_visit"
+                                                        attrs="{'invisible':[('report_number','!=',3)]}"
+                                                        string="التقرير الثالث"
+                                                        type="object"
+                                                        class="oe_highlight"/>
+                                                    <button name="button_fourth_visit"
+                                                        attrs="{'invisible':[('report_number','!=',4)]}"
+                                                        string="التقرير الرابع"
+                                                        type="object"
+                                                        class="oe_highlight"/>
+                                                    <field name="report_state" widget="statusbar" nolabel="1"
+                                                       statusbar_visible="1,2,3,4,5"
+                                                       statusbar_colors='{"2":"blue"}'/>
+                                                </header> -->
+                                                 <group string="بيانات المتطوع">
+                                                    <field name="volunteer_id_report" required="1"/>
+                                                    <field name="volunteer_phone_report" readonly="1"/>
+                                                    <field name="volunteer_phone2_report" readonly="1"/>
+                                
+                                                </group>
+                                                <group string="البيانات اﻷساسية" invisible="0" cols="4">
+                                                    <group>
+                                                        
+                                                        <field name="report_number" readonly="1"/>
+                                                        <field name="date_execution" readonly="1"/>
+                                                        <field name="report_date" readonly="1"/>
+                                                        <field name="report_type" required="1"/>
+                                                        <field name="visit_date" required="1"/>
+                                                    </group>
+                                                    <group>
+                                                    </group>
+                                                </group> 
+                                                <group string="الحالة الاقتصادية" cols="4">
+                                                    <group>
+                                                        <field name="project_income_daily" widget="char" required="1"/>
+                                                        <field name="project_expenses_daily" widget="char" required="1"/>
+                                                        <field name="home_expenses_daily" widget="char" required="1"/>
+                                                        <field name="project_profit" readonly="1" />
+                                                    </group>
+                                                    <group>
+                                                        <field name="project_income_weekly" widget="char" required="1"/>
+                                                        <field name="project_expenses_weekly" widget="char" required="1"/>
+                                                        <field name="home_expenses_weekly" widget="char" required="1"/>
+                                                        <field name="project_saving" readonly="1"/>
+                                                    </group>
+                                                    <field name="project_profit2" readonly="1" invisible="1"/>
+                                                    <field name="project_saving2" readonly="1" invisible="1"/>
+                                                </group>
+                                                <group string="حالة التروسيكل">
+                                                    <group>
+                                                        <field name="project_state"  widget="radio" options="{'horizontal': true}"/>
+                                                        <field name="safety_factor"  widget="radio" options="{'horizontal': true}"/>
+                                                        <field name="trosikl_type"  widget="radio" options="{'horizontal': true}"/>
+                                                        <field name="update_type"  attrs="{'invisible':[('trosikl_type','not in',[2])]}"/>
+                                                        <field name="trosikl_problem"/>
+                                                        <field name="activity_type"/>
+                                                    </group>
+                                                    <group string="الحالة الاجتماعية">
+                                                        <field name="preparing_bride" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('report_number','not in',[1])]}"/>
+                                                        <field name="patient_care" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('report_number','not in',[1])]}"/>
+                                                        <field name="orphan_care" widget="radio" options="{'horizontal': true}" attrs="{'invisible':[('report_number','not in',[1])]}"/>
+                                                        <field name="pay_dept" widget="radio" options="{'horizontal': true}"/>
+                                                        <field name="original_dept" attrs="{'invisible':[('pay_dept','not in',[1])]}"/>
+                                                        <field name="pay_done" attrs="{'invisible':[('pay_dept','not in',[1])]}"/>
+                                                        <field name="rest_dept" attrs="{'invisible':[('pay_dept','not in',[1])]}"/>
+                                                        <field name="reason_dept" attrs="{'invisible':[('pay_dept','not in',[1])]}"/>
+                                                    </group>
+                                                </group>
+                                            </form>
+                                        </field>
+                                </group>    
+                            </page>
+                            <page string="المتطوعين" states="accreditation,research" invisible="1">
+                                <field name="volunteers_ids" invisible="1">
+                                    <tree editable="bottom" invisible="1">
+                                        <field name="volunteer_id" string="اسم المتطوع"/>
+                                        <field name="phone"/>
+                                        <field name="role"/>
+                                        <field name="date_start"/>
+                                        <field name="date_finish"/>
+                                        <field name="is_active"/>
+                                    </tree>
+                                </field>
+                            </page>
+							<!--<page string="HR Settings" invisible="1">
+                                <group invisible="1">
+                                    <group string='Status' invisible="1">
+                                        <field name="user_id" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
+                                    </group>
+                                </group>
+                            </page>-->
+                        </notebook>
+                    </sheet>
+                    <!--<div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>-->
+                </form>
+            </field>
+        </record>
+
+        
+        
+        <record id="view_needed_cases_pivot" model="ir.ui.view">
+            <field name="name">needed.cases.pivot</field>
+            <field name="model">needed.cases</field>
+            <field eval="1" name="priority"/> 
+            <field name="arch" type="xml">
+                <pivot string="Gov Cases">
+                    <field name="gov_id" type="row"/>
+                    <!--<field name="city_id" type="row"/>-->
+                    <field name="state" type="col"/>
+                </pivot>
+            </field>
+        </record>
+        
+
+        
+        <record id="view_needed_cases_pivot1" model="ir.ui.view">
+            <field name="name">needed.cases.pivot2</field>
+            <field name="model">needed.cases</field>
+            <field eval="2" name="priority"/>
+            <field name="arch" type="xml">
+                <pivot string="Govs and City">
+                    <field name="gov_id" type="row"/>
+                    <field name="city_id" type="row"/>
+                    <!-- <field name="state" type="col"/> -->
+                </pivot>
+            </field>
+        </record>
+        
+        <record id="view_needed_cases_pivot3" model="ir.ui.view">
+            <field name="name">needed.cases.pivot3</field>
+            <field name="model">needed.cases</field>
+            <field eval="3" name="priority"/>
+            <field name="arch" type="xml">
+                <pivot string="Govs and Authorized Opinion">
+                    <field name="gov_id" type="row"/>
+                    <field name="city_id" type="row"/>
+                    <field name="authorized_opinion" type="col"/> 
+                </pivot>
+            </field>
+        </record>
+        
+         <record id="view_needed_cases_pivot4" model="ir.ui.view">
+            <field name="name">needed.cases.pivot4</field>
+            <field name="model">needed.cases</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <pivot string="Govs and Drugs">
+                    <field name="gov_id" type="row"/>
+                    <field name="city_id" type="row"/>
+                    <field name="drugs_status" type="col"/> 
+                </pivot>
+            </field>
+        </record>
+        
+        <record id="view_needed_cases_pivot5" model="ir.ui.view">
+            <field name="name">needed.cases.pivot5</field>
+            <field name="model">needed.cases</field>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <pivot string="Govs and Search State">
+                    <field name="gov_id" type="row"/>
+                    <field name="city_id" type="row"/>
+                    <field name="accepted4" type="col"/> 
+                </pivot>
+            </field>
+        </record>
+        
+        <record id="view_needed_cases_pivot6" model="ir.ui.view">
+            <field name="name">needed.cases.pivot6</field>
+            <field name="model">needed.cases.economyreports</field>
+            <field eval="6" name="priority"/>
+            <field name="arch" type="xml">
+                <pivot string="Total Economy Reports">
+                    <field name="trosikl_type" type="row"/>
+                    <!--<field name="trosikl_type" type="col"/>-->
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_needed_cases_graph" model="ir.ui.view">
+            <field name="name">needed.cases.graph</field>
+            <field name="model">needed.cases</field>
+            <field name="arch" type="xml">
+                <graph string="Gov Cases">
+                    <field name="gov_id"/>
+                    <field name="state"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="vo_kanban_view_needed_cases">
+        <field name="name">needed.cases.kanban</field>
+        <field name="model">needed.cases</field>
+        <!--<field name="priority">10</field>-->
+        <field name="arch" type="xml">
+            <kanban default_group_by="state_economy" class="o_kanban_small_column" edit="false" create="false">
+                <field name="color"/>
+                <field name="state_economy" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                <field name="name"/>
+                <field name="national_number"/>
+                <field name="mobile_phone"/>
+                <field name="gov_id"/>
+                <field name="city_id"/>
+                <field name="village_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click">
+                            <!--<div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>--> 
+                            <div class="oe_kanban_content">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                                <ul>
+                                    <li t-if="record.national_number.raw_value"><field name="national_number"/></li>
+                                    <li t-if="record.mobile_phone.raw_value"><field name="mobile_phone"/></li>
+                                    <li t-if="record.gov_id.raw_value"><field name="gov_id"/></li>
+                                    <li t-if="record.city_id.raw_value"><field name="city_id"/></li>
+                                    <li t-if="record.village_id.raw_value"><field name="village_id"/></li>
+                                </ul>
+                            <div class="text-muted">
+                            </div>
+                        </div>
+                        <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="vo_kanban_view_needed_cases_economyreports">
+        <field name="name">needed.cases.economyreports.kanban</field>
+        <field name="model">needed.cases.economyreports</field>
+        <!--<field name="inherit_id" ref="needed.cases.vo_kanban_view_needed_cases"/>-->
+        <!--<field name="priority">10</field>-->
+        <field name="arch" type="xml">
+            <kanban default_group_by="cases_id" class="o_kanban_small_column" edit="false" create="false">
+                <field name="color"/>
+                <field name="cases_id" options='{"group_by_tooltip": {"description": "Stage Description", "legend_priority": "Use of stars"}}'/>
+                <field name="report_date"/>
+                <field name="report_type"/>
+                <field name="project_profit2"/>
+                <field name="project_saving2"/>
+                <field name="visit_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                    <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click">
+                            <!--<div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>--> 
+                        <div class="oe_kanban_content">
+                                  <strong>
+                                <field name="report_number"/>
+                            </strong>
+                            <ul>
+                                <li t-if="record.report_date.raw_value"><field name="report_date"/></li>
+                                <li t-if="record.visit_date.raw_value"><field name="visit_date"/></li>
+                                <li t-if="record.report_type.raw_value"><field name="report_type"/></li>
+                                <li t-if="record.project_profit2.raw_value"><field name="project_profit2"/></li>
+                                <li t-if="record.project_saving2.raw_value"><field name="project_saving2"/></li>
+                            </ul>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <record id="action_needed_cases" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form,pivot,graph</field>
+            <field name="view_id" ref="view_needed_cases_tree"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases_2" model="ir.actions.act_window">
+            <field name="name">المتابعة الإقتصادية</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="view_needed_cases_tree"/>
+            <field name="domain">[('state','=','follow')]</field>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases_economy" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases.economyreports</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,pivot</field>
+            <field name="view_id" ref="view_needed_cases_economy_tree"/>
+            <!--<field name="domain">[('status','=','morto') ]</field>-->
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases2" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases1" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot1"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases3" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot3"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases4" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot4"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <record id="action_needed_cases5" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot5"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        
+        <!--<record id="action_needed_cases6" model="ir.actions.act_window">
+            <field name="name">Needed Cases Economy</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases.economyreports</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot</field>
+            <field name="view_id" ref="view_needed_cases_pivot6"/>
+            <field name="domain">[('state','=','المتابعة الاقتصادية')]</field>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>-->
+        
+    <menuitem id="head_menu_needed_cases"
+            name="رزق حلال"
+            />
+         <menuitem
+            id="gov_needed_cases_act"
+            parent="head_menu_needed_cases"
+            sequence="1"
+            name="المحافظات والقرى"
+            />
+        <menuitem
+            id="gov_needed_cases_act1"
+            parent="gov_needed_cases_act"
+            sequence="2"
+            action="govs_villages.action_govs_villages_gov"
+            name="بيانات المحافظات"
+            />
+        <menuitem
+            id="city_needed_cases_act1"
+            parent="gov_needed_cases_act"
+            sequence="3"
+            action="govs_villages.action_govs_villages_city"
+            name="بيانات المراكز/المدن"
+            />
+        <menuitem
+            id="village_needed_cases_act1"
+            parent="gov_needed_cases_act"
+            sequence="4"
+            action="govs_villages.action_govs_villages_village"
+            name="بيانات القرى/المناطق"
+            />
+        <menuitem
+            id="volunteer_needed_cases_act"
+            name="المتطوعيين"
+            sequence="5"
+            parent="head_menu_needed_cases"
+            />
+        <menuitem
+            id="menu_volunteer_needed_cases_act"
+            name="بيانات المتطوعيين"
+            sequence="6"
+            parent="volunteer_needed_cases_act"
+            action="volunteers.action_volunteers"
+            />
+            
+        <menuitem id="menu_needed_cases"
+                name="المستفيدين"
+                sequence="7"
+                parent="head_menu_needed_cases"
+            />
+        <menuitem
+            id="menu_needed_cases_act"
+            name="بيانات المستفيدين"
+            sequence="8"
+            parent="menu_needed_cases"
+            action="action_needed_cases"
+            />
+            <menuitem
+            id="menu_needed_cases_act_economy"
+            name="متابعة التقارير الاقتصادية"
+            sequence="10"
+            parent="menu_needed_cases"
+            action="action_needed_cases_economy"
+            />
+        <menuitem
+            id="menu_needed_cases_act_economy2"
+            name="المتابعة الاقتصادية"
+            sequence="9"
+            parent="menu_needed_cases"
+            action="action_needed_cases_2"
+            />
+        <menuitem
+            id="report_needed_cases_act"
+            sequence="9"
+            parent="head_menu_needed_cases"
+            name="التقارير"
+            />
+        <menuitem
+            id="report_needed_cases_act1"
+            parent="report_needed_cases_act"
+            sequence="10"
+            name="تقرير المحافظات"
+            action="action_needed_cases1" 
+            />
+        <menuitem
+            id="report_needed_cases_act2"
+            parent="report_needed_cases_act"
+            sequence="11"
+            name="تقرير المحافظات ومرحلة اﻷسرة"
+            action="action_needed_cases2" 
+            />
+        <menuitem
+            id="report_needed_cases_act3"
+            parent="report_needed_cases_act"
+            sequence="12"
+            name="تقرير المحافظات والاعتماد "
+            action="action_needed_cases3" 
+            />
+         <menuitem
+            id="report_needed_cases_act4"
+            parent="report_needed_cases_act"
+            sequence="13"
+            name="تقرير المحافظات وتحليل المخدرات "
+            action="action_needed_cases4" 
+            />
+          <menuitem
+            id="report_needed_cases_act5"
+            parent="report_needed_cases_act"
+            sequence="14"
+            name="تقرير المحافظات وحالة البحث "
+            action="action_needed_cases5" 
+            />
+         <!--<menuitem
+            id="report_economy_needed_cases_act"
+            sequence="16"
+            parent="head_menu_needed_cases"
+            name="التقارير الاقتصادية"
+            />-->
+            <!--<menuitem 
+            id="report_economy_needed_cases_act_1"
+            sequence="17"
+            parent="report_economy_needed_cases_act"
+            name="اجمالي التقارير الاقتصادية"
+            action="action_needed_cases6"
+            />-->
+     </data>
+</openerp>

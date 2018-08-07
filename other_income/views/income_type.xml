@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+
+<record id="income_type_form" model="ir.ui.view">
+    <field name="name">income.type.form</field>
+    <field name="model">income.type</field>
+    <field name="arch" type="xml">
+        <form string="Income Type">
+            <group name="main">
+                <field name="state" required="1"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="journal_id" required="1"/>
+                <field name="account_id" required="1"/>
+                <field name="responsible"/>
+                <field name="nota"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="income_type_tree" model="ir.ui.view">
+    <field name="name">income.type.tree</field>
+    <field name="model">income.type</field>
+    <field name="arch" type="xml">
+        <tree string="Income Type">
+            <field name="name"/>
+                <field name="code"/>
+                <field name="journal_id"/>
+                <field name="account_id"/>
+                <field name="responsible"/>
+                <field name="nota"/>
+        </tree>
+    </field>
+</record>
+
+<record id="income_type_action" model="ir.actions.act_window">
+    <field name="name">Income Type</field>
+    <field name="res_model">income.type</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="income_type_menu" action="income_type_action"
+    parent="menu_Config_other_income" sequence="32"/>
+    
+</data>
+</odoo>

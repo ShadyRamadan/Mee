@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  © 2014-2016 Barroux Abbey (http://www.barroux.org)
+  © 2014-2016 Akretion France (Alexis de Lattre <alexis.delattre@akretion.com>)
+  License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+-->
+
+<odoo>
+<data>
+
+<record id="donation_fundstream_form" model="ir.ui.view">
+    <field name="name">donation.fundstream.form</field>
+    <field name="model">donation.fundstream</field>
+    <field name="arch" type="xml">
+        <form string="Fund Stream">
+            <group name="main">
+                <group>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="max_code" invisible="1"/>
+                    <field name="start_date"/>
+                    <field name="analytic_account_id" />
+                    <field name="project_id"/>
+                    <field name="nota"/>
+                </group>
+            </group>
+            <group col='6' name="theme" string="Theme">
+                <field name="is_education"/>
+                <field name="is_health"/>
+                <field name="is_livelihood"/>
+                <field name="is_cash_assistant"/>
+                <field name="is_basic_needs"/>
+                <field name="is_youth_development"/>
+                <field name="sub_theme" required="1"/>
+            </group>
+            <group>
+                <field name="total_amount"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="donation_fundstream_tree" model="ir.ui.view">
+    <field name="name">donation.fundstream.tree</field>
+    <field name="model">donation.fundstream</field>
+    <field name="arch" type="xml">
+        <tree string="Fund Stream">
+            <field name="code"/>
+            <field name="name"/>
+            <field name="start_date"/>
+            <field name="project_id"/>
+        </tree>
+    </field>
+</record>
+
+<record id="donation_fundstream_action" model="ir.actions.act_window">
+    <field name="name">Fund Stream</field>
+    <field name="res_model">donation.fundstream</field>
+    <field name="view_mode">tree,form</field>
+</record>
+
+<menuitem id="donation_fundstream_menu" action="donation_fundstream_action"
+    parent="donation_config_menu" sequence="31"/>
+
+</data>
+</odoo>

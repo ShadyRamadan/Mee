@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    <record model="ir.ui.view" id="view_purchase_requisition_inherit_form">
+        <field name="name">purchase.requisition.form.inherit</field>
+        <field name="model">purchase.requisition</field>
+        <field name="inherit_id" ref="purchase_requisition.view_purchase_requisition_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_ids']" position="after">
+                <separator string="Members"/>
+                   <group>
+                       <group>
+                              <field name="member_1" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                              <field name="member_2" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                       </group>
+                       <group>
+                              <field name="member_3" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                              <field name="member_4" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                       </group>
+                   </group>
+            </xpath>
+        </field>
+    </record>
+    </data>
+</openerp>

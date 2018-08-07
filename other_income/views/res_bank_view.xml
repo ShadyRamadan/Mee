@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_res_bank_form_inherit" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="Bank">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="bic"/>
+                    </group>
+                    <group>
+                        <group string="Address">
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                            </div>
+                        </group>
+                        <group string="Communication">
+                            <field name="phone"/>
+                            <field name="fax"/>
+                            <field name="email" widget="email"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group name="Accounts">
+                        <group string="Accounts">
+                            <field name="property_account_income_id"  required="1"/>
+                            <field name="property_account_expense_id"/>
+                            <field name="opening_balance"  required="1"/>
+                            <field name="currency_rate"  required="1"/>
+                            <field name="current_balance"/>
+                            <field name="balance"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="view_res_bank_tree_inherit" model="ir.ui.view">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="arch" type="xml">
+                <tree string="Banks">
+                    <field name="name"/>
+                    <field name="bic"/>
+                    <field name="country"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_res_bank_form_inherit" model="ir.actions.act_window">
+            <field name="name">Banks</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new bank.
+              </p><p>
+                Manage bank records you want to be used in the system.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem id="menu_config_bank_accounts_inherit" name="Bank Accounts" 
+        parent="menu_Config_other_income" action="action_res_bank_form_inherit"/>
+        
+    </data>
+</openerp>
+

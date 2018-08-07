@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+<data>
+<template id="report_neededcases_economy">
+    <t t-call="report.html_container">
+        <t t-foreach="docs" t-as="o">
+            <t t-call="report.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <font face="Arial"><h1 class="text-center">التقارير الإقتصادية</h1>
+                    <h2 class="text-center"><span t-field="o.name"/></h2></font>
+                    <div class="row mt32 mb32">
+                        <!--<h2 class="col-xs-12 text-right">بيانات المعتمد</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <span t-field="o.volunteer_phone2_auth"/>
+                            <strong>:موبيل المتطوع 2</strong>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span t-field="o.volunteer_phone_auth"/>
+                            <strong>:موبيل المتطوع</strong>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>اسم المتطوع:</strong>
+                            <span t-field="o.volunteer_id_auth"/>
+                        </div>-->
+                        <h2 class="col-xs-12 text-right">البيانات العامة</h2><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>النوع:</strong>
+                            <span t-field="o.gender"/>
+                        </div>
+                        <div class="col-xs-3 text-right">
+                            <strong>السن:</strong>
+                            <span t-field="o.age"/>
+                        </div>
+                        <div class="col-xs-5 text-right">
+                            <strong>الرقم القومي:</strong>
+                            <span t-field="o.national_number"/>
+                        </div><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>حالة البحث:</strong>
+                            <span t-field="o.accepted2"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>التليفون اﻷرضي:</strong>
+                            <span t-field="o.tel_phone"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الموبيل:</strong>
+                            <span t-field="o.mobile_phone"/>
+                        </div><br/><br/>
+                        <div class="col-xs-4 text-right">
+                            <strong>القرية/المنطقة:</strong>
+                            <span t-field="o.village_id"/>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <strong>المركز/المدينة:</strong>
+                            <span t-field="o.city_id"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>المحافظة:</strong>
+                            <span t-field="o.gov_id"/>
+                        </div><br/>
+                        <div class="col-xs-8 text-right">
+                            <strong>العنوان بالتفصيل:</strong>
+                            <span t-field="o.address"/>
+                        </div>
+                         <div class="col-xs-4 text-right">
+                            <strong>الشارع:</strong>
+                            <span t-field="o.street"/>
+                        </div><br/>
+                    <h2 class="col-xs-12 text-right">التقرير الإقتصادية</h2><br/>
+                        <t t-if="o.economyreports_ids">
+                        <h3></h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center"><strong>نوع التروسيكل</strong></th>
+                                    <th class="text-center"><strong>عامل اﻷمان</strong></th>
+                                    <th class="text-center"><strong>حالة المشروع</strong></th>
+                                    <th class="text-center"><strong>متوسط الادخار</strong></th>
+                                    <th class="text-center"><strong>متوسط ربح المشروع</strong></th>
+                                    <th class="text-center"><strong> مصروفات المنزل أسبوعيا</strong></th>
+                                    <th class="text-center"><strong>مصروفات المشروع اسبوعيا</strong></th>
+                                    <th class="text-center"><strong>دخل المشروع أسبوعيا</strong></th>
+                                    <th class="text-center"><strong>تاريخ التقرير المتوقع</strong></th>
+                                    <th class="text-center"><strong>رقم التقرير</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="o.economyreports_ids" t-as="economyreports_ids">
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.trosikl_type"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.safety_factor"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.project_state"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.project_saving"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.home_expenses_weekly"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.project_profit"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.project_expenses_weekly"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.project_income_weekly"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.report_date"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-field="economyreports_ids.report_number"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </t>
+                    <div class="oe_structure"/>
+                </div>
+                </div>
+            </t>
+        </t>
+    </t>
+</template>
+</data>
+</openerp>
+

@@ -1,0 +1,369 @@
+<?xml version="1.0"?>
+<!-- Copyright 2016 Eficent Business and IT Consulting Services S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<openerp>
+    <data>
+         <!-- needed cases -->
+        <record id="view_needed_cases_tree" model="ir.ui.view">
+            <field name="name">needed.cases.tree</field>
+            <field name="model">needed.cases</field>
+            <field name="arch" type="xml">
+                <tree string="Needed Cases">
+                    <field name="name"/>
+                    <field name="national_number"/>
+                    <field name="number_family"/>
+                    <field name="country_id"/>
+                    <field name="gov_id"/>
+                    <field name="city_id"/>
+                    <field name="village_id"/>
+                    <field name="age"/>
+                    <field name="gender"/>
+                    <field name="accepted2" string="State"/>
+                    <field name="state" string="Stage"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_needed_cases_form" model="ir.ui.view">
+            <field name="name">needed.cases.form</field>
+            <field name="model">needed.cases</field>
+            <field name="arch" type="xml">
+                <form string="Needed Cases">
+                    <header>
+                        <button name="button_research"
+                            states="accreditation,papers,drugs,execution,follow"
+                            string="Reset"
+                            type="object"/>
+                        <button name="button_to_accreditation" states="research"
+                            string="Accreditation" type="object"
+                            class="oe_highlight"/>
+                        <button name="button_to_papers" states="accreditation"
+                            string="Papers" type="object"
+                            class="oe_highlight"/>
+                        <button name="button_to_drugs" 
+                            states="papers"
+                            string="Drugs" type="object"
+                            class="oe_highlight"/>
+                        <button name="button_execution"
+                            states="drugs"
+                            string="Execution"
+                            type="object"
+                            class="oe_highlight"/>
+                        <button name="button_follow"
+                            states="execution"
+                            string="Follow Up"
+                            type="object"
+                            class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                           statusbar_visible="research,accreditation,papers,drugs,execution,follow"
+                           statusbar_colors='{"accreditation":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group string='General Information'>
+                                <field name="name"/>
+                                <field name="national_number"/>
+                            <!--<field name="number1" invisible="0"/>
+                            <field name="number2" invisible="0"/>
+                            <field name="number3" invisible="0"/>
+                            <field name="number4" invisible="0"/>
+                            <field name="number5" invisible="0"/>
+                            <field name="number6" invisible="0"/>-->
+                                <field name="gender"/>
+                                <field name="age"/>
+                                <field name="mobile_phone"/>
+                                <field name="tel_phone"/>
+                                <field name="number_family"/>
+                                <field name="accepted2" string="State"/>
+                            </group>
+                            <group string='Address'>
+                                <field name="gov_id"/>
+                                <field name="city_id"/>
+                                <field name="village_id"/>
+                                <field name="street"/>
+                                <field name="address"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group string='Education and Work'>
+                                <field name="education" widget="radio" options="{'horizontal': true}"/>
+                                <field name="job" widget="radio" options="{'horizontal': true}"/>
+                                <field name="project_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="project_other" attrs="{'invisible':['|',('project_type','not in',[2])]}"/>
+                                <field name="have_project"/>
+                                <field name="project_association" attrs="{'invisible':['|',('have_project','not in',[3])]}"/>
+                            </group>
+                            <group string='Marital Status'>
+                                <field name="marital_status" widget="radio" options="{'horizontal': true}"/>
+                                <field name="depends" widget="radio" options="{'horizontal': true}"/>
+                                <field name="number_depends" attrs="{'invisible':['|',('depends','not in',[1])]}"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group string='أمراض لا تهدد الحياة'>
+                                <field name="is_disease"/>
+                                <field name="is_back" attrs="{'readonly':['|',('is_disease','=',True)]}"/>
+                                <field name="is_chronic_disease" attrs="{'readonly':['|',('is_disease','=',True)]}"/> 
+                            </group>
+                            <group string='أمراض مزمنة تهدد الحياة'>
+                                <field name="is_not_chronic_disease"/>
+                                <field name="is_virus_C" attrs="{'readonly':['|',('is_not_chronic_disease','=',True)]}"/>
+                                <field name="is_kidney_fail" attrs="{'readonly':['|',('is_not_chronic_disease','=',True)]}"/>
+                                <field name="is_cancer" attrs="{'readonly':['|',('is_not_chronic_disease','=',True)]}"/>
+                            </group>
+                        </group>
+                        <group string='الإعاقات' col='8' attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                        <!--<div>-->
+                            <field name="is_right"/>
+                            <field name="is_blind" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                            <field name="is_amputation" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                            <field name="is_paralysis" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        <!--</div> style="width: 25%" -->
+                        <!--<field name="is_right"/>
+                        <field name="is_blind" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        <field name="is_amputation" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        <field name="is_paralysis" attrs="{'readonly':['|',('is_right','=',True)]}"/>-->
+                            <field name="is_disability" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                            <field name="is_problem" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                            <field name="is_weakness" attrs="{'readonly':['|',('is_right','=',True)]}"/>
+                        </group>
+                        <group string="Expenses" col='6' attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <field name="department_rent"/>
+                            <field name="associations_expenses"/>
+                            <field name="device_payments"/>
+                            <field name="water_gas"/>
+                            <field name="studying_child"/>
+                            <field name="home_expenses"/>
+                            <field name="monthly_dept"/>
+                            <field name="other_expenses"/>
+                            <field name="total_expenses"/>
+                        </group>
+                        <group string="Income" attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group string="دخل شهري لرب الاسرة">
+                                <field name="person_job"/>
+                                <field name="person_craft"/>
+                            </group>
+                            <group string="دخل شهري لباقي الأسرة">
+                                <field name="family_job"/>
+                                <field name="family_craft"/>
+                                <field name="family_salary"/>
+                            </group>    
+                        </group>
+                        <group col='6' attrs="{'invisible':['|',('state','in',['accreditation'])]}"> 
+                            <field name="associations_salary"/>
+                            <field name="relatives_salary"/>
+                            <field name="department_income"/>
+                            <field name="other_income"/>
+                            <field name="total_income"/>
+                        </group>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group string="Dept">
+                                <field name="depts" widget="radio" options="{'horizontal': true}"/>
+                                <field name="total_depts" attrs="{'invisible':['|',('depts','not in',[2,3])]}"/>
+                            </group>
+                            <group string="Live with Family">
+                                <field name="live_family" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                        </group>
+                        <group string="Property or partnerships" col='8' attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <field name="is_property"/>
+                            <field name="is_earth" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_house" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_motorbike" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_caro" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_shop" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_farsha" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_cow" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="is_sheep" attrs="{'readonly':['|',('is_property','=',True)]}"/>
+                            <field name="number_sheep" attrs="{'invisible':['|',('is_sheep','=',False)]}"/>
+                            <field name="total_earth" attrs="{'invisible':['|',('is_earth','=',False)]}"/>
+                            <field name="total_cow" attrs="{'invisible':['|',('is_cow','=',False)]}"/>
+                        </group>
+                        <group string="House" attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <group>
+                                <field name="house_ownership" widget="radio" options="{'horizontal': true}"/>
+                                <field name="bathroom" widget="radio" options="{'horizontal': true}"/>
+                                <field name="walls" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                            <group>
+                                <field name="house_type" widget="radio" options="{'horizontal': true}"/>
+                                <field name="number_room"/>
+                                <field name="roof" widget="radio" options="{'horizontal': true}"/>
+                            </group> 
+                        <!--<group string="يوجد حمام؟">
+                        </group>
+                        <group string="Number of Rooms">
+                        </group>
+                        <group string="الحوائط">
+                        </group>
+                        <group string="السقف">
+                        </group>--> 
+                        </group>
+                        <group string="الأجهزة الموجودة بالمنزل" col='8' attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <field name="is_devices"/>
+                            <field name="is_television" attrs="{'readonly':['|',('is_devices','=',True)]}"/>
+                            <field name="is_fridge" attrs="{'readonly':['|',('is_devices','=',True)]}"/>
+                            <field name="is_cooker" attrs="{'readonly':['|',('is_devices','=',True)]}"/>
+                            <field name="is_fans" attrs="{'readonly':['|',('is_devices','=',True)]}"/>
+                            <field name="is_washer" attrs="{'readonly':['|',('is_devices','=',True)]}"/>
+                        </group>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <field name="experiences_project" widget="radio" options="{'horizontal': true}"/>
+                            <field name="exp_months" attrs="{'invisible':['|',('experiences_project','not in',[1])]}"/>
+                        </group>
+                        <group attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                            <field name="notes"/>
+                            <field name="story"/>
+                            <field name="criteria"/>
+                        </group>
+                    <!--<group>
+                         <field name="volunteering_id" string="Responsible Volunteers"/>
+                    </group>-->
+                    <!--<label for="volunteer_ids"/>
+                    <field name="volunteer_ids">
+                        <tree editable="bottom">
+                            <field name="volunteer_id" string="Responsible Volunteers"/>
+                            <field name="volunteer_mobile_phone" options='{"no_open": True}'/>
+                            <field name="Start Date"/>
+                            <field name="code"/>
+                        </tree>
+                    </field>-->
+                    <group>
+                        
+                    </group>
+                        <notebook>
+                        <!--<page string="Volunteers">
+                            <group>
+                                <group>
+                                    <field name="volunteer_id" string="Related Volunteer"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
+                        <field name="date_start"/>
+                                   <field name="date_start"
+                                        readonly="1"/>
+                                    <field name="is_active"/>
+                                </group>
+                            </group>
+                        </page>-->
+                            <page string="Volunteers" attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                                <field name="volunteers_ids">
+                                    <tree editable="bottom">
+                                        <field name="volunteer_id"/>
+                                        <field name="phone"/>
+                                    <!--<field name="cases_id"/>-->
+                                        <field name="date_start"/>
+                                        <field name="date_finish"/>
+                                        <field name="is_active"/>
+                                    </tree>
+                               <!--> <form>
+                                    <group>
+                                        <field name="volunteer_id"/>
+                                        <field name="date_start"/>
+                                        <field name="date_finish"/>
+                                        <field name="is_active"/>
+                                    </group>
+                                </form> -->
+                                </field>
+                            </page>
+                            <page string="HR Settings" attrs="{'invisible':['|',('state','in',['accreditation'])]}">
+                                <group>
+                                    <group string='Status'>
+                                        <field name="user_id" string="Related User"
+                                            context="{'default_groups_ref': ['base.group_user']}"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Accreditation" attrs="{'invisible':['|',('state','not in',['accreditation','papers'])]}">
+                                <group>
+                                    <group string='Accreditation'>
+                                        <field name="drugs" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="smoking" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="previous_issues" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="previous_projects" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="what_project"/>
+                                        <field name="trosikle"/>
+                                        <field name="experience_work"/>
+                                    <!--<field name="experience_work" widget="radio" options="{'horizontal': true}"/>-->
+                                        <field name="profession_trosikle" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="static_money" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="authorized_opinion" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="authorized_reason"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_needed_cases" model="ir.actions.act_window">
+            <field name="name">Needed Cases</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">needed.cases</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_needed_cases_tree"/>
+            <field name="help">If you are working on the Lifemakers projects, you can manage the information of volunteers you are working on from here.</field>
+        </record>
+        <record model="ir.ui.view" id="vo_kanban_view_needed_cases">
+        <field name="name">needed.cases.kanban</field>
+        <field name="model">needed.cases</field>
+        <!--<field name="priority">10</field>-->
+        <field name="arch" type="xml">
+            <kanban class="o_hr_employee_kanban">
+                <!--<field name="last_login"/>
+                <field name="message_is_follower"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
+                <field name="message_needaction_counter"/>-->
+                <templates>
+                    <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <span class="fa fa-bars fa-lg"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                    <t t-if="widget.editable"><li><a type="set_cover">Set Cover Image</a></li></t>
+                                    <t t-if="widget.editable"><li><a type="edit">Edit Task</a></li></t>
+                                    <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div> 
+                        <div class="oe_kanban_content">
+                                  <strong>
+                                <field name="name"/>
+                            </strong>
+                            <ul>
+                                <li t-if="record.national_number.raw_value"><field name="national_number"/></li>
+                                <li t-if="record.mobile_phone.raw_value"><field name="mobile_phone"/></li>
+                                <li t-if="record.gov_id.raw_value"><field name="gov_id"/></li>
+                                <li t-if="record.city_id.raw_value"><field name="city_id"/></li>
+                                <li t-if="record.village_id.raw_value"><field name="village_id"/></li>
+                            </ul>
+                                <div class="text-muted">
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+     <menuitem id="parent_menu_needed_cases"
+            name="Needed Cases"
+            />
+        <menuitem id="menu_needed_cases"
+            name="Needed Cases"
+            parent="parent_menu_needed_cases"
+            />
+        <menuitem
+            id="menu_needed_cases_act"
+            sequence="10"
+            parent="menu_needed_cases"
+            action="action_needed_cases"
+            />
+     </data>
+</openerp>

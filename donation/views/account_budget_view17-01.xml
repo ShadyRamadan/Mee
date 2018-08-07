@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="crossovered_budget_inherit_view_form_2">
+            <field name="name">crossovered.budget.inherit.again.view.form</field>
+            <field name="model">crossovered.budget</field>
+            <field name="inherit_id" ref="account_budget_update.crossovered_budget_inherit_view_form"/>
+            <field name="arch" type="xml">
+               <data>
+                    <xpath expr="//field[@name='code']" position="after">
+                        <field name="budget_fundstream"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

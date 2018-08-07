@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="budget_tree_hierarchy" model="ir.ui.view">
+        <field name="name">account.budget.tree.hierarchy</field>
+        <field name="model">crossovered.budget</field>
+        <field name="field_parent">crossovered_budget_line</field>
+        <field name="arch" type="xml">
+            <tree string="Chart of accounts" toolbar="1" >
+                <field name="name"/>
+                <field name="creating_user_id"/>
+                <field name="state" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_budget_hierarchy" model="ir.actions.act_window">
+        <field name="name">Chart of Budgets Hierarchy</field>
+        <field name="res_model">crossovered.budget</field>
+        <field name="view_type">tree</field>
+        <field name="domain"></field>
+        <field name="view_id" ref="budget_tree_hierarchy"/>
+    </record>
+
+    <menuitem action="action_budget_hierarchy"
+              id="menu_action_budget_hierarchy"
+              parent="account.menu_finance_entries" sequence="61"/>
+</odoo>
